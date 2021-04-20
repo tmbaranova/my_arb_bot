@@ -28,9 +28,11 @@ class ArbitrBot:
     def update_case_list(self, update, context):
         print (type(update))
         print (update)
-        message = update.message.text
+        message = update.message.text.split("\n")
         print (message)
-        self.case_list.append(message)
+        for m in message:
+            m = m.replace("А", "A")
+            self.case_list.append(m)
         context.bot.send_message(chat_id = update.message.chat.id, text= self.case_list)
         print (self.case_list)
         return self.case_list
