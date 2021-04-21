@@ -6,9 +6,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SAMLResponse = os.getenv('SAMLResponse')
+
+
 class Parser:
     def open_session(self):
-
         headers_for_session = {
             'accept': 'application/json, text/javascript, */*',
             'Connection': 'keep-alive',
@@ -29,7 +30,6 @@ class Parser:
                      headers=headers_for_session).raise_for_status()
 
         return session
-
 
     def get_content(self, session, case_number):
 
@@ -60,14 +60,14 @@ class Parser:
         response_text = response.text
         return response_text
 
-    def get_status (self, response_text):
+    def get_status(self, response_text):
         soup = BeautifulSoup(response_text, 'html.parser')
         case_status = soup.find('div', {'class': 'b-case-header-desc'}).text
         return case_status
 
+
 # p = Parser()
 # session = p.open_session()
 # content = p.get_content(session, 'A40-123/2021')
-# print (content)
 # status = p.get_status(content)
 # print (status)

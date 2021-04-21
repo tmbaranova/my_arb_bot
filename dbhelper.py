@@ -27,7 +27,18 @@ class DBHelper:
         self.conn.commit()
         self.conn.close()
 
+    def delete(self, case_number):
+        self.conn = sqlite3.connect(self.dbname)
+        self.cur = self.conn.cursor()
+        self.cur.execute("DELETE FROM cases WHERE case_number = (?)", (case_number,))
+        self.conn.commit()
+        self.conn.close()
+
     def get_cases(self):
         self.conn = sqlite3.connect(self.dbname)
         self.cur = self.conn.cursor()
         return [x[0] for x in self.cur.execute("SELECT case_number FROM cases")]
+
+# db = DBHelper()
+# db.add_case('123')
+# db.delete_all_cases()

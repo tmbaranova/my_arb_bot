@@ -8,7 +8,12 @@ from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
 from telegram import Bot
 
 from dbhelper import DBHelper
-from parser import Parser
+from arb_parser import Parser
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
+)
 
 load_dotenv()
 
@@ -22,24 +27,74 @@ class ArbitrBot:
         self.updater = Updater(token=TELEGRAM_TOKEN, use_context=True)
         self.updater.dispatcher.add_handler(CommandHandler('del', self.delete_case_list))
         self.updater.dispatcher.add_handler(CommandHandler('show', self.show_case_list))
+        self.updater.dispatcher.add_handler(CommandHandler('start', self.start))
+        self.updater.dispatcher.add_handler(CommandHandler('stop', self.stop))
+        self.updater.dispatcher.add_handler(CommandHandler('stop', self.stop))
         self.updater.dispatcher.add_handler(MessageHandler(Filters.text, self.update_case_list))
         self.updater.start_polling()
+        self.db = DBHelper()
+        self.stop = False
+
 
     def update_case_list(self, update, context):
         message = update.message.text.split("\n")
         for m in message:
-            db.add_case(m)
+            self.db.add_case(m)
 
     def delete_case_list(self, bot, update):
-        db.delete_all_cases()
+        self.db.delete_all_cases()
 
     def show_case_list(self, bot, update):
-        case_list = db.get_cases()
+        case_list = self.db.get_cases()
         bot.message.reply_text(case_list)
 
+    def start(self, bot, update):
+        self.stop = False
+        main()
+        return self
+
+    def stop(self, bot, update):
+        self.stop = True
+        return self
 
 
+def main():
+    logging.info(f'Бот запущен')
+    bot.bot.send_message(CHAT_ID, 'Бот запущен')
+    parser = Parser()
+    logger = logging.getLogger(__name__)
+    console_handler = logging.StreamHandler()
+    logger.addHandler(console_handler)
+    status = 1
 
-a = ArbitrBot()
-db = DBHelper()
-p = Parser()
+    case_list = bot.db.get_cases()
+    while status is not None and case_list != []:
+        case_list = bot.db.get_cases()
+        for case in case_list:
+            if bot.stop:
+                logging.info(f'Прервал цикл')
+                bot.bot.send_message(CHAT_ID, 'Прервал цикл')
+                return
+            try:
+                session = parser.open_session()
+                content = parser.get_content(session, case)
+                status = parser.get_status(content)
+                logging.info(f'Статус дела {case} = {status}')
+                if 'завершено' in status:
+                    message = f'Рассмотрение дела {case} завершено'
+                    bot.bot.send_message(CHAT_ID, message)
+                    logging.info(f'Сообщение отправлено: {message}')
+                    bot.db.delete(case)
+                time.sleep(10)
+            except Exception as e:
+                error_text = f'Бот столкнулся с ошибкой: {e}'
+                logging.exception(e)
+                bot.bot.send_message(CHAT_ID, error_text)
+                time.sleep(5)
+
+    logging.info(f'Вышел из цикла')
+    bot.bot.send_message(CHAT_ID, 'Вышел из цикла')
+
+bot = ArbitrBot()
+
+
