@@ -2,10 +2,10 @@ import logging
 import os
 import time
 
-
 from dotenv import load_dotenv
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
 from telegram import Bot
+from telegram.ext.dispatcher import run_async
 
 from dbhelper import DBHelper
 from arb_parser import Parser
@@ -35,28 +35,32 @@ class ArbitrBot:
         self.db = DBHelper()
         self.stop = False
 
-
+    @run_async
     def update_case_list(self, update, context):
         message = update.message.text.split("\n")
         for m in message:
+            m = m.replace("А", "A")
             self.db.add_case(m)
 
+    @run_async
     def delete_case_list(self, bot, update):
         self.db.delete_all_cases()
 
+    @run_async
     def show_case_list(self, bot, update):
         case_list = self.db.get_cases()
         bot.message.reply_text(case_list)
 
+    @run_async
     def start(self, bot, update):
         self.stop = False
         main()
         return self
 
+    @run_async
     def stop(self, bot, update):
         self.stop = True
         return self
-
 
 def main():
     logging.info(f'Бот запущен')
@@ -85,7 +89,7 @@ def main():
                     bot.bot.send_message(CHAT_ID, message)
                     logging.info(f'Сообщение отправлено: {message}')
                     bot.db.delete(case)
-                time.sleep(10)
+                time.sleep(1200)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)

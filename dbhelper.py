@@ -39,6 +39,3 @@ class DBHelper:
         self.cur = self.conn.cursor()
         return [x[0] for x in self.cur.execute("SELECT case_number FROM cases")]
 
-# db = DBHelper()
-# db.add_case('123')
-# db.delete_all_cases()

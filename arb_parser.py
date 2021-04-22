@@ -65,9 +65,3 @@ class Parser:
         case_status = soup.find('div', {'class': 'b-case-header-desc'}).text
         return case_status
 
-
-# p = Parser()
-# session = p.open_session()
-# content = p.get_content(session, 'A40-123/2021')
-# status = p.get_status(content)
-# print (status)
