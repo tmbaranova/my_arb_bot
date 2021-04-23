@@ -72,10 +72,10 @@ def main():
     status = 1
 
     case_list = bot.db.get_cases()
-    while status is not None and case_list != []:
+    while case_list != []:
         case_list = bot.db.get_cases()
         for case in case_list:
-            if bot.stop:
+            if status is None:
                 logging.info(f'Прервал цикл')
                 bot.bot.send_message(CHAT_ID, 'Прервал цикл')
                 return
