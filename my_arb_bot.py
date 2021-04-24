@@ -39,23 +39,37 @@ class ArbitrBot:
 
     @run_async
     def update_case_list(self, update, context):
+        if int(update.message.chat_id) != int(CHAT_ID):
+            update.message.reply_text(
+                'Извините, для Вас данный бот недоступен')
+            return
         message = update.message.text.split("\n")
         for m in message:
             m = m.replace("А", "A")
             self.db.add_case(m)
 
     @run_async
-    def delete_case_list(self, bot, update):
+    def delete_case_list(self, update, context):
+        if int(update.message.chat_id) != int(CHAT_ID):
+            update.message.reply_text(
+                'Извините, для Вас данный бот недоступен')
+            return
         self.db.delete_all_cases()
 
     @run_async
-    def show_case_list(self, bot, update):
+    def show_case_list(self, update, context):
+        if int(update.message.chat_id) != int(CHAT_ID):
+            update.message.reply_text('Извините, для Вас данный бот недоступен')
+            return
         case_list = self.db.get_cases()
-        bot.message.reply_text(case_list)
+        update.message.reply_text(case_list)
 
     @run_async
-    def start(self, bot, update):
-        self.stop = False
+    def start(self, update, context):
+        if int(update.message.chat_id) != int(CHAT_ID):
+            update.message.reply_text(
+                'Извините, для Вас данный бот недоступен')
+            return
         main()
         return self
 
