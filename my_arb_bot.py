@@ -69,6 +69,7 @@ def main():
     logger.addHandler(console_handler)
     status = 1
     case_list = bot.db.get_cases()
+
     while case_list:
         case_list = bot.db.get_cases()
         for case in case_list:
