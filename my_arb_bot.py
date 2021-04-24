@@ -25,12 +25,14 @@ class ArbitrBot:
     def __init__(self):
         self.bot = Bot(token=TELEGRAM_TOKEN)
         self.updater = Updater(token=TELEGRAM_TOKEN, use_context=True)
-        self.updater.dispatcher.add_handler(CommandHandler('del', self.delete_case_list))
-        self.updater.dispatcher.add_handler(CommandHandler('show', self.show_case_list))
-        self.updater.dispatcher.add_handler(CommandHandler('start', self.start))
-        self.updater.dispatcher.add_handler(CommandHandler('stop', self.stop))
-        self.updater.dispatcher.add_handler(CommandHandler('stop', self.stop))
-        self.updater.dispatcher.add_handler(MessageHandler(Filters.text, self.update_case_list))
+        self.updater.dispatcher.add_handler(
+            CommandHandler('del', self.delete_case_list))
+        self.updater.dispatcher.add_handler(
+            CommandHandler('show', self.show_case_list))
+        self.updater.dispatcher.add_handler(
+            CommandHandler('start', self.start))
+        self.updater.dispatcher.add_handler(
+            MessageHandler(Filters.text, self.update_case_list))
         self.updater.start_polling()
         self.db = DBHelper()
         self.stop = False
@@ -57,10 +59,6 @@ class ArbitrBot:
         main()
         return self
 
-    @run_async
-    def stop(self, bot, update):
-        self.stop = True
-        return self
 
 def main():
     logging.info(f'Бот запущен')
@@ -70,7 +68,6 @@ def main():
     console_handler = logging.StreamHandler()
     logger.addHandler(console_handler)
     status = 1
-
     case_list = bot.db.get_cases()
     while status is not None and case_list != []:
         case_list = bot.db.get_cases()
@@ -99,6 +96,5 @@ def main():
     logging.info(f'Вышел из цикла')
     bot.bot.send_message(CHAT_ID, 'Вышел из цикла')
 
+
 bot = ArbitrBot()
-
-

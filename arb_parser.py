@@ -15,13 +15,17 @@ class Parser:
             'Connection': 'keep-alive',
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-Requested-With': 'XMLHttpRequest',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.146 Safari/537.36',
+            'user-agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                'AppleWebKit/537.36 (KHTML, like Gecko) '
+                'Chrome/88.0.4324.146 Safari/537.36',
         }
 
         form_data = {
-
-            'RelayState': 'http://kad.arbitr.ru:80/account/LogOnViaEsia_v3?controllerName=https%3a%2f%2fkad.arbitr.ru%3a443%2f&isRemember=False',
-
+            'RelayState':
+                'http://kad.arbitr.ru:80/account/'
+                'LogOnViaEsia_v3?controllerName='
+                'https%3a%2f%2fkad.arbitr.ru%3a443%2f&isRemember=False',
             'SAMLResponse': SAMLResponse,
         }
         session = requests.Session()
@@ -34,7 +38,8 @@ class Parser:
     def get_content(self, session, case_number):
 
         headers_for_get_content = {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image'
+            'Accept': 'text/html,application/xhtml+xml,'
+                      'application/xml;q=0.9,image'
                       '/avif,image/webp,image/apng,*/*;q=0.8,application/'
                       'signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip,deflate,br',
@@ -51,7 +56,10 @@ class Parser:
             'Sec-Fetch-Site': 'cross-site',
             'Sec-Fetch-User': '?1',
             'Referer': f'https://kad.arbitr.ru/Card?number={case_number}',
-            'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.146 Safari/537.36',
+            'User-agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                'AppleWebKit/537.36 (KHTML, like Gecko) '
+                'Chrome/88.0.4324.146 Safari/537.36',
         }
 
         url = f'https://kad.arbitr.ru/Card?number={case_number}'
