@@ -95,7 +95,11 @@ def main():
                 session = parser.open_session()
                 content = parser.get_content(session, case)
                 status = parser.get_status(content)
+                info = f'Статус дела {case} = {status}'
+
+                bot.bot.send_message(CHAT_ID, info)
                 logging.info(f'Статус дела {case} = {status}')
+
                 if 'завершено' in status:
                     message = f'Рассмотрение дела {case} завершено'
                     bot.bot.send_message(CHAT_ID, message)
