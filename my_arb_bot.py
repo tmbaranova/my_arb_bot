@@ -34,6 +34,7 @@ class ArbitrBot:
         self.updater.dispatcher.add_handler(
             MessageHandler(Filters.text, self.update_case_list))
         self.updater.start_polling()
+        dbhelper.create_table()
 
 
     @run_async
