@@ -47,6 +47,7 @@ def delete(case_number):
 def get_cases():
     conn = create_connection()
     cur = conn.cursor()
-    return [x[0] for x in cur.execute(
-            "SELECT case_number FROM cases")]
+    cases = cur.execute(
+            "SELECT case_number FROM cases")
+    return [x[0] for x in cases]
 
