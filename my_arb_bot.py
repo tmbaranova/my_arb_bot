@@ -120,4 +120,4 @@ def main():
 
 if __name__ == "__main__":
     bot = ArbitrBot()
-    bot.main()
+    main()
