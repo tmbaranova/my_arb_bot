@@ -17,8 +17,7 @@ def create_table():
     cur = conn.cursor()
     cur.execute(
         '''CREATE TABLE IF NOT EXISTS cases
-        (id INTEGER NOT NULL PRIMARY KEY UNIQUE,
-        case_number TEXT);''')
+        (case_number TEXT);''')
     conn.commit()
     conn.close()
 
