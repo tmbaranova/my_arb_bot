@@ -92,11 +92,6 @@ def main():
                 session = parser.open_session()
                 content = parser.get_content(session, case)
                 status = parser.get_status(content)
-                if status is None:
-                    logging.info(f'Пустой статус дела, я прервал цикл')
-                    bot.bot.send_message(CHAT_ID,
-                                         'Пустой статус дела, я прервал цикл')
-                    return
                 info = f'Статус дела {case} = {status}'
 
                 bot.bot.send_message(CHAT_ID, info)
@@ -112,7 +107,10 @@ def main():
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)
                 bot.bot.send_message(CHAT_ID, error_text)
-                time.sleep(5)
+                logging.info(f'Я прервал цикл')
+                bot.bot.send_message(CHAT_ID, 'Я прервал цикл')
+                return
+
 
     logging.info(f'Список дел пуст или кончился, я вышел из цикла')
     bot.bot.send_message(CHAT_ID, 'Список дел пуст или кончился, я вышел из цикла')
