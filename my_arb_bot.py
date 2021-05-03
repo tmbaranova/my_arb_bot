@@ -7,7 +7,7 @@ from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
 from telegram import Bot
 from telegram.ext.dispatcher import run_async
 
-from dbhelper import DBHelper
+from . import dbhelper
 from arb_parser import Parser
 
 logging.basicConfig(
@@ -34,8 +34,7 @@ class ArbitrBot:
         self.updater.dispatcher.add_handler(
             MessageHandler(Filters.text, self.update_case_list))
         self.updater.start_polling()
-        self.db = DBHelper()
-        self.stop = False
+
 
     @run_async
     def update_case_list(self, update, context):
@@ -46,7 +45,7 @@ class ArbitrBot:
         message = update.message.text.split("\n")
         for m in message:
             m = m.replace("А", "A")
-            self.db.add_case(m)
+            dbhelper.add_case(m)
 
     @run_async
     def delete_case_list(self, update, context):
@@ -54,14 +53,14 @@ class ArbitrBot:
             update.message.reply_text(
                 'Извините, для Вас этот бот недоступен')
             return
-        self.db.delete_all_cases()
+        dbhelper.delete_all_cases()
 
     @run_async
     def show_case_list(self, update, context):
         if int(update.message.chat_id) != int(CHAT_ID):
             update.message.reply_text('Извините, для Вас этот бот недоступен')
             return
-        case_list = self.db.get_cases()
+        case_list = dbhelper.get_cases()
         update.message.reply_text(case_list)
 
     @run_async
@@ -82,10 +81,10 @@ def main():
     console_handler = logging.StreamHandler()
     logger.addHandler(console_handler)
     status = 1
-    case_list = bot.db.get_cases()
+    case_list = dbhelper.get_cases()
 
     while case_list:
-        case_list = bot.db.get_cases()
+        case_list = dbhelper.get_cases()
         for case in case_list:
 
             try:
@@ -106,7 +105,7 @@ def main():
                     message = f'Рассмотрение дела {case} завершено'
                     bot.bot.send_message(CHAT_ID, message)
                     logging.info(f'Сообщение отправлено: {message}')
-                    bot.db.delete(case)
+                    dbhelper.delete(case)
                 time.sleep(1200)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
