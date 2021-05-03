@@ -41,7 +41,7 @@ class ArbitrBot:
     def update_case_list(self, update, context):
         if int(update.message.chat_id) != int(CHAT_ID):
             update.message.reply_text(
-                'Извините, для Вас данный бот недоступен')
+                'Извините, для Вас этот бот недоступен')
             return
         message = update.message.text.split("\n")
         for m in message:
@@ -52,14 +52,14 @@ class ArbitrBot:
     def delete_case_list(self, update, context):
         if int(update.message.chat_id) != int(CHAT_ID):
             update.message.reply_text(
-                'Извините, для Вас данный бот недоступен')
+                'Извините, для Вас этот бот недоступен')
             return
         self.db.delete_all_cases()
 
     @run_async
     def show_case_list(self, update, context):
         if int(update.message.chat_id) != int(CHAT_ID):
-            update.message.reply_text('Извините, для Вас данный бот недоступен')
+            update.message.reply_text('Извините, для Вас этот бот недоступен')
             return
         case_list = self.db.get_cases()
         update.message.reply_text(case_list)
@@ -68,7 +68,7 @@ class ArbitrBot:
     def start(self, update, context):
         if int(update.message.chat_id) != int(CHAT_ID):
             update.message.reply_text(
-                'Извините, для Вас данный бот недоступен')
+                'Извините, для Вас этот бот недоступен')
             return
         main()
         return self
@@ -87,14 +87,16 @@ def main():
     while case_list:
         case_list = bot.db.get_cases()
         for case in case_list:
-            if status is None:
-                logging.info(f'Прервал цикл')
-                bot.bot.send_message(CHAT_ID, 'Прервал цикл')
-                return
+
             try:
                 session = parser.open_session()
                 content = parser.get_content(session, case)
                 status = parser.get_status(content)
+                if status is None:
+                    logging.info(f'Пустой статус дела, я прервал цикл')
+                    bot.bot.send_message(CHAT_ID,
+                                         'Пустой статус дела, я прервал цикл')
+                    return
                 info = f'Статус дела {case} = {status}'
 
                 bot.bot.send_message(CHAT_ID, info)
@@ -112,8 +114,10 @@ def main():
                 bot.bot.send_message(CHAT_ID, error_text)
                 time.sleep(5)
 
-    logging.info(f'Вышел из цикла')
-    bot.bot.send_message(CHAT_ID, 'Вышел из цикла')
+    logging.info(f'Список дел пуст или кончился, я вышел из цикла')
+    bot.bot.send_message(CHAT_ID, 'Список дел пуст или кончился, я вышел из цикла')
 
 
-bot = ArbitrBot()
+if __name__ == "__main__":
+    bot = ArbitrBot()
+    bot.main()

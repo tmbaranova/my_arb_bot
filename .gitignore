@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 data_base.sqlite
-.idea
+.idea/
