@@ -91,6 +91,7 @@ def main():
                 session = parser.open_session()
                 content = parser.get_content(session, case)
                 case_id = get_case_id(case)
+                logging.info(f'Case_id дела {case} равен {case_id}')
                 if case_id is None:
                     case_id_from_soup = parser.get_case_id(content)
                     update_case_id(case, case_id_from_soup)
