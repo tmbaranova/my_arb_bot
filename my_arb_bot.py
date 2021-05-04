@@ -115,7 +115,7 @@ def main():
                                          f'event_info дела {case} is None, я вышел из цикла')
                     return
 
-                last_event_date = get_last_event_date(case)
+                last_event_date = get_last_event_date(case)[0]
                 last_event_date_type = type(last_event_date)
                 logging.info(
                     f'Last event date = {last_event_date}, {last_event_date_type}')
