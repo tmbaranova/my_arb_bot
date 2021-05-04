@@ -20,7 +20,8 @@ def create_table():
         '''CREATE TABLE IF NOT EXISTS cases
         (case_number TEXT,
         case_id TEXT DEFAULT NULL,
-        last_event_date date);''')
+        last_event_date date,
+        );''')
     conn.commit()
     conn.close()
 
@@ -28,8 +29,8 @@ def add_case(item_text):
     conn = create_connection()
     cur = conn.cursor()
     td = datetime.today()
-    sql = "INSERT INTO cases (case_number, case_id, last_event_date) VALUES (%s, %s, %s)"
-    cur.execute(sql, (item_text, None, td))
+    sql = "INSERT INTO cases (case_number, last_event_date) VALUES (%s, %s)"
+    cur.execute(sql, (item_text, td))
     conn.commit()
     conn.close()
 
