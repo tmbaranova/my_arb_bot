@@ -20,7 +20,7 @@ def create_table():
         '''CREATE TABLE IF NOT EXISTS cases
         (case_number TEXT,
         case_id TEXT DEFAULT NULL,
-        access code TEXT DEFAULT NULL,
+        access_code TEXT DEFAULT NULL,
         is_finished boolean DEFAULT false,
         is_in_force boolean DEFAULT false,
         force_date date DEFAULT NULL,
