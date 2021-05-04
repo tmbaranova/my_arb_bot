@@ -70,7 +70,7 @@ def get_case_id(case_number):
 def update_case_id(case_id, case_number):
     conn = create_connection()
     cur = conn.cursor()
-    sql = "UPDATE cases SET case_id=VALUES (%s) WHERE case_number = (%s)"
+    sql = "UPDATE cases SET case_id = (%s) WHERE case_number = (%s)"
     cur.execute(sql, (case_id, case_number))
     conn.commit()
     conn.close()
