@@ -20,7 +20,21 @@ def create_table():
         '''CREATE TABLE IF NOT EXISTS cases
         (case_number TEXT,
         case_id TEXT DEFAULT NULL,
-        last_event_date date);''')
+        access code TEXT DEFAULT NULL,
+        is_finished boolean DEFAULT false,
+        is_in_force boolean DEFAULT false,
+        force_date date DEFAULT NULL,
+        last_event TEXT DEFAULT NULL,
+        last_event_date date,         
+        first_decision TEXT DEFAULT NULL,
+        first_decision date DEFAULT NULL,
+        apell_decision TEXT DEFAULT NULL,
+        apell_decision date DEFAULT NULL,
+        kas_decision TEXT DEFAULT NULL,
+        kas_decision date DEFAULT NULL,
+        is_mot_dec_required boolean DEFAULT false,
+        is_mot_dec boolean DEFAULT false,
+        mot_dec_date date DEFAULT NULL);''')
     conn.commit()
     conn.close()
 
