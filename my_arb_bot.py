@@ -9,6 +9,7 @@ from telegram.ext.dispatcher import run_async
 
 from dbhelper import *
 from arb_parser import Parser
+from datetime import datetime
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -119,9 +120,10 @@ def main():
                     f'Last event date = {last_event_date}')
                 for event in event_info:
                     document_date = event.get('DisplayDate')
+                    date_convert = datetime.strptime(document_date, '%d.%m.%Y')
                     logging.info(f'{event}')
-                    document_date_type = type(document_date)
-                    logging.info(f'{document_date}, {document_date_type}')
+                    document_date_type = type(date_convert)
+                    logging.info(f'{date_convert}, {document_date_type}')
 
 
 
