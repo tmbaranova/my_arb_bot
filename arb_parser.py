@@ -111,6 +111,7 @@ class Parser:
                f'caseId={case_id}&page=1&perPage=25')
 
         response = session.get(url, headers=headers_for_get_json)
+        print (response)
         case_info = response.json()
         return case_info
 
