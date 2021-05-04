@@ -20,8 +20,7 @@ def create_table():
         '''CREATE TABLE IF NOT EXISTS cases
         (case_number TEXT,
         case_id TEXT DEFAULT NULL,
-        last_event_date date,
-        );''')
+        last_event_date date);''')
     conn.commit()
     conn.close()
 
