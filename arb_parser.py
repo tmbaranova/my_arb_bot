@@ -73,3 +73,8 @@ class Parser:
         case_status = soup.find('div', {'class': 'b-case-header-desc'}).text
         return case_status
 
+    def get_case_id(self, response_text):
+        soup = BeautifulSoup(response_text, 'html.parser')
+        case_id = soup.find('input', {'id': 'caseId'})['value']
+        return case_id
+

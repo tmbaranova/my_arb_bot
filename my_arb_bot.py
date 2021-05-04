@@ -87,11 +87,18 @@ def main():
     while case_list:
         case_list = get_cases()
         for case in case_list:
-
             try:
                 session = parser.open_session()
                 content = parser.get_content(session, case)
+                case_id = get_case_id(case)
+                if case_id is None:
+                    case_id_from_soup = parser.get_case_id(content)
+                    update_case_id(case, case_id_from_soup)
+                    case_id_new = get_case_id(case)
+                    logging.info(f'Case_id дела {case} равен {case_id_new}')
+
                 status = parser.get_status(content)
+
                 info = f'Статус дела {case} = {status}'
 
                 bot.bot.send_message(CHAT_ID, info)

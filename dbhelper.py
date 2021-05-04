@@ -57,3 +57,22 @@ def get_cases():
     conn.close()
     return cases
 
+def get_case_id(case_number):
+    conn = create_connection()
+    cur = conn.cursor()
+    sql = "SELECT case_id FROM cases WHERE case_number = (%s)"
+    cur.execute(sql, (case_number,))
+    case_id = cur.fetchall()
+    conn.commit()
+    conn.close()
+    return case_id
+
+def update_case_id(case_id, case_number):
+    conn = create_connection()
+    cur = conn.cursor()
+    sql = "UPDATE cases SET case_id=VALUES (%s) WHERE case_number = (%s)"
+    cur.execute(sql, (case_id, case_number))
+    conn.commit()
+    conn.close()
+
+
