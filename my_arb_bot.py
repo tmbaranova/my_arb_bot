@@ -87,6 +87,7 @@ def main():
         case_list = get_cases()
         for case in case_list:
             try:
+                case = case[0]
                 session = parser.open_session()
                 case_id = get_case_id(case)[0]
                 logging.info(f'Case_id дела {case} равен {case_id}')
@@ -98,10 +99,10 @@ def main():
                         bot.bot.send_message(CHAT_ID, f'case_id_from_soup дела {case} is None, я вышел из цикла')
                         return
 
-                    update_case_id(case_id_from_soup, case[0])
-                    case_id_new = get_case_id(case)
-                    logging.info(f'Case_id дела {case} обновлен и равен {case_id_new}')
-                    message = f'Case_id дела {case} обновлен и равен {case_id_new}'
+                    update_case_id(case_id_from_soup, case)
+                    case_id = get_case_id(case)[0]
+                    logging.info(f'Case_id дела {case} обновлен и равен {case_id}')
+                    message = f'Case_id дела {case} обновлен и равен {case_id}'
                     bot.bot.send_message(CHAT_ID, message)
 
                 case_info = parser.get_json(session, case_id)
@@ -117,7 +118,7 @@ def main():
                 logging.info(
                     f'Last event date = {last_event_date}')
                 for event in event_info:
-                    document_date = event_info.get('DisplayDate')
+                    document_date = event.get('DisplayDate')
                     logging.info(f'{event}')
                     document_date_type = type(document_date)
                     logging.info(f'{document_date}, {document_date_type}')
