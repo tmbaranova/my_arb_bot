@@ -104,8 +104,8 @@ class Parser:
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.146 Safari/537.36',
 
         }
-        date = datetime.datetime.now()
-        date = datetime.datetime.timestamp(date)
+        date = datetime.now()
+        date = datetime.timestamp(date)
         date_now = int(date * 1000)
         url = (f'https://kad.arbitr.ru/Kad/CaseDocumentsPage?_={date_now}&'
                f'caseId={case_id}&page=1&perPage=25')
