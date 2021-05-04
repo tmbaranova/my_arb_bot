@@ -116,8 +116,9 @@ def main():
                     return
 
                 last_event_date = get_last_event_date(case)
+                last_event_date_type = type(last_event_date)
                 logging.info(
-                    f'Last event date = {last_event_date}')
+                    f'Last event date = {last_event_date}, {last_event_date_type}')
                 for event in event_info:
                     document_date = event.get('DisplayDate')
                     date_convert = datetime.strptime(document_date, '%d.%m.%Y')
