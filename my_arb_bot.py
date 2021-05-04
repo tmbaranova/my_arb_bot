@@ -96,12 +96,12 @@ def main():
                     case_id_from_soup = parser.get_case_id(content)
                     update_case_id(case_id_from_soup, case[0])
                     case_id_new = get_case_id(case)
-                    logging.info(f'Case_id дела {case} равен {case_id_new}')
+                    logging.info(f'Case_id дела {case} обновлен и равен {case_id_new}')
+                    message = f'Case_id дела {case} обновлен и равен {case_id_new}'
+                    bot.bot.send_message(CHAT_ID, message)
 
                 status = parser.get_status(content)
-
                 info = f'Статус дела {case} = {status}'
-
                 bot.bot.send_message(CHAT_ID, info)
                 logging.info(f'Статус дела {case} = {status}')
 
