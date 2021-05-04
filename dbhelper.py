@@ -76,7 +76,7 @@ def get_case_id(case_number):
     cur = conn.cursor()
     sql = "SELECT case_id FROM cases WHERE case_number = (%s)"
     cur.execute(sql, (case_number,))
-    case_id = cur.fetchall()
+    case_id = cur.fetchone()
     conn.commit()
     conn.close()
     return case_id
@@ -88,5 +88,23 @@ def update_case_id(case_id, case_number):
     cur.execute(sql, (case_id, case_number))
     conn.commit()
     conn.close()
+
+def case_is_finished_or_not(case_number, is_finished):
+    conn = create_connection()
+    cur = conn.cursor()
+    sql = "UPDATE cases SET is_finished = (%s) WHERE case_number = (%s)"
+    cur.execute(sql, (case_number, is_finished))
+    conn.commit()
+    conn.close()
+
+def get_last_event_date(case_number):
+    conn = create_connection()
+    cur = conn.cursor()
+    sql = "SELECT last_event_date FROM cases WHERE case_number = (%s)"
+    cur.execute(sql, (case_number,))
+    last_event_date = cur.fetchone()
+    conn.commit()
+    conn.close()
+    return last_event_date
 
 

@@ -81,7 +81,6 @@ def main():
     logger = logging.getLogger(__name__)
     console_handler = logging.StreamHandler()
     logger.addHandler(console_handler)
-    status = 1
     case_list = get_cases()
 
     while case_list:
@@ -89,27 +88,62 @@ def main():
         for case in case_list:
             try:
                 session = parser.open_session()
-                content = parser.get_content(session, case)
-                case_id = get_case_id(case)[0][0]
+                case_id = get_case_id(case)
                 logging.info(f'Case_id дела {case} равен {case_id}')
                 if case_id is None:
+                    content = parser.get_content(session, case)
                     case_id_from_soup = parser.get_case_id(content)
+                    if case_id_from_soup is None:
+                        logging.info(f'case_id_from_soup дела {case} is None, я вышел из цикла')
+                        bot.bot.send_message(CHAT_ID, f'case_id_from_soup дела {case} is None, я вышел из цикла')
+                        return
+
                     update_case_id(case_id_from_soup, case[0])
                     case_id_new = get_case_id(case)
                     logging.info(f'Case_id дела {case} обновлен и равен {case_id_new}')
                     message = f'Case_id дела {case} обновлен и равен {case_id_new}'
                     bot.bot.send_message(CHAT_ID, message)
 
-                status = parser.get_status(content)
-                info = f'Статус дела {case} = {status}'
-                bot.bot.send_message(CHAT_ID, info)
-                logging.info(f'Статус дела {case} = {status}')
+                case_info = parser.get_json(session, case_id)
+                event_info = case_info.get('Result').get('Items')
+                if event_info is None:
+                    logging.info(
+                        f'event_info дела {case} is None, я вышел из цикла')
+                    bot.bot.send_message(CHAT_ID,
+                                         f'event_info дела {case} is None, я вышел из цикла')
+                    return
 
-                if 'завершено' in status:
-                    message = f'Рассмотрение дела {case} завершено'
-                    bot.bot.send_message(CHAT_ID, message)
-                    logging.info(f'Сообщение отправлено: {message}')
-                    delete(case)
+                last_event_date = get_last_event_date(case)
+                logging.info(
+                    f'Last event date = {last_event_date}')
+                for event in event_info:
+                    document_date = event_info.get('DisplayDate')
+                    logging.info(f'{event}')
+                    document_date_type = type(document_date)
+                    logging.info(f'{document_date}, {document_date_type}')
+
+
+
+
+
+
+                # status = parser.get_status(content)
+                # info = f'Статус дела {case} = {status}'
+                # bot.bot.send_message(CHAT_ID, info)
+                # logging.info(f'Статус дела {case} = {status}')
+                #
+                # if 'завершено' in status:
+                #     message = f'Рассмотрение дела {case} завершено'
+                #     bot.bot.send_message(CHAT_ID, message)
+                #     logging.info(f'Сообщение отправлено: {message}')
+                #     is_finished = True
+                #     case_is_finished_or_not(case[0], is_finished)
+                # else:
+                #     is_finished = False
+                #     case_is_finished_or_not(case[0], is_finished)
+
+
+
                 time.sleep(1200)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
