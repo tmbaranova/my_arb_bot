@@ -119,7 +119,7 @@ def main():
                 last_event_date_type = type(last_event_date)
                 logging.info(
                     f'Last event date = {last_event_date}, {last_event_date_type}')
-                for event in list(reversed(event_info)):
+                for event in reversed(event_info):
                     document_date = event.get('DisplayDate')
                     date_convert = datetime.strptime(document_date, '%d.%m.%Y').date()
                     logging.info(f'{event}')
