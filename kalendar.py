@@ -91,7 +91,8 @@ def data_vstupl (data, lst_weeks):
 
     d = str(d)
     d = f'{datetime.datetime.strptime(d,"%j").strftime("%d.%m")}.{year}'
-    return d
+    force_data = datetime.datetime.strptime(d, '%d.%m.%Y')
+    return force_data
 
 def force_date_runner (event_date):
     year = get_year(event_date)
