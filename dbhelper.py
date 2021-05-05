@@ -99,44 +99,6 @@ def case_is_finished_or_not(case_number, is_finished):
     conn.commit()
     conn.close()
 
-def get_last_event_date(case_number):
-    conn = create_connection()
-    cur = conn.cursor()
-    sql = "SELECT last_event_date FROM cases WHERE case_number = (%s)"
-    cur.execute(sql, (case_number,))
-    last_event_date = cur.fetchone()
-    conn.commit()
-    conn.close()
-    return last_event_date
-
-def update_last_event_date(case_number, last_event_date):
-    conn = create_connection()
-    cur = conn.cursor()
-    sql = "UPDATE cases SET last_event_date = (%s) WHERE case_number = (%s)"
-    cur.execute(sql, (last_event_date, case_number))
-    conn.commit()
-    conn.close()
-
-def get_first_decision_date(case_number):
-    conn = create_connection()
-    cur = conn.cursor()
-    sql = "SELECT first_decision_date FROM cases WHERE case_number = (%s)"
-    cur.execute(sql, (case_number,))
-    first_decision_date = cur.fetchone()
-    conn.commit()
-    conn.close()
-    return first_decision_date
-
-def get_apell_decision_date(case_number):
-    conn = create_connection()
-    cur = conn.cursor()
-    sql = "SELECT apell_decision_date FROM cases WHERE case_number = (%s)"
-    cur.execute(sql, (case_number,))
-    apell_decision_date = cur.fetchone()
-    conn.commit()
-    conn.close()
-    return apell_decision_date
-
 def update_row(row, date, case_number):
     conn = create_connection()
     cur = conn.cursor()
