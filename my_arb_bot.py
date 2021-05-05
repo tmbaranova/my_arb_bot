@@ -168,27 +168,20 @@ def main():
                             force_date = force_date_runner(date_convert)
                             update_row('force_date', force_date, case)
                             update_row('first_decision_date', date_convert, case)
-                            first_decision_date = get_first_decision_date(case)[0]
-                            force_date_from_db = get_row('force_date', case)[0]
-
                             logging.info(
-                                f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}')
+                                f'first_decision_date дела {case} обновлена и равна {date_convert}. Вст в силу {force_date}')
                             bot.bot.send_message(CHAT_ID,
-                                                 f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}')
+                                                 f'first_decision_date дела {case} обновлена и равна {date_convert}. Вст в силу {force_date}')
                         # Если в БД есть решение 1ой, и нет даты решения апелл, нужно проверить, не мотивировку ли вынесли
                         if first_decision_date and apell_decision_date is None:
                             if 'Мотивированное' in content_type:
                                 force_date = force_date_runner(date_convert)
                                 update_row('force_date', force_date, case)
                                 update_row('first_decision_date', date_convert, case)
-
-                                first_decision_date = get_first_decision_date(case)[0]
-                                force_date_from_db = get_row('force_date', case)[0]
-
                                 logging.info(
-                                    f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}')
+                                    f'first_decision_date дела {case} обновлена и равна {date_convert} (мот реш). Вст в силу {force_date}')
                                 bot.bot.send_message(CHAT_ID,
-                                                     f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}')
+                                                     f'first_decision_date дела {case} обновлена и равна {date_convert} (мот реш).Вст в силу {force_date}')
                             else:
                                 #Если в БД есть решение 1ой, нет даты решения апелл, и вынесено не мот реш, значит, вынесено пост. апелл
                                 update_row('apell_decision_date', date_convert, case)
@@ -211,9 +204,9 @@ def main():
                                                      f'По делу {case} жалоба подана в срок')
 
                         except Exception as e:
-                            logging.info(f'{e}, по делу {case} подана жалоба, а дата вступления в силу не определена')
+                            logging.info(f'{e} По делу {case} подана жалоба, а дата вступления в силу не определена')
                             bot.bot.send_message(CHAT_ID,
-                                                 f'{e}, по делу {case} подана жалоба, а дата вступления в силу не определена')
+                                                 f'{e} По делу {case} подана жалоба, а дата вступления в силу не определена')
                         update_row('force_date', None, case)
 
                     # Удалить дату вступления в силу, если подано заявление о выдаче мот решения
