@@ -128,7 +128,11 @@ def main():
                 for event in reversed(event_info):
                     first_decision_date = get_first_decision_date(case)[0]
                     apell_decision_date = get_apell_decision_date(case)[0]
-                    force_date_from_db = get_row('force_date', case)[0]
+                    try:
+                        force_date_from_db = get_row('force_date', case)[0]
+                    except Exception:
+                        force_date_from_db = None
+
 
                     if today == force_date_from_db:
                         logging.info(
