@@ -117,6 +117,7 @@ class Parser:
 
     def check_organization(self, event):
         organisation = event.get('Declarers').get('Organization')
+        print (f'organization = {organisation}')
         if 'ЛОКОТРАНС' in organisation or 'Локотранс' in organisation or 'локотранс' in organisation:
             return False
         return True
