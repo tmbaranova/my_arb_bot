@@ -41,7 +41,8 @@ def create_table():
 def add_case(item_text):
     conn = create_connection()
     cur = conn.cursor()
-    td = datetime.today()
+    td = datetime.strptime('01.01.2019', '%d.%m.%Y')
+    # td = datetime.today()
     sql = "INSERT INTO cases (case_number, last_event_date) VALUES (%s, %s)"
     cur.execute(sql, (item_text, td))
     conn.commit()
@@ -106,5 +107,13 @@ def get_last_event_date(case_number):
     conn.commit()
     conn.close()
     return last_event_date
+
+def update_last_event_date(case_number, last_event_date):
+    conn = create_connection()
+    cur = conn.cursor()
+    sql = "UPDATE cases SET last_event_date = (%s) WHERE case_number = (%s)"
+    cur.execute(sql, (last_event_date, case_number))
+    conn.commit()
+    conn.close()
 
 

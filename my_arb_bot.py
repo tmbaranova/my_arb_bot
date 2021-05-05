@@ -121,12 +121,17 @@ def main():
                     f'Last event date = {last_event_date}, {last_event_date_type}')
                 for event in reversed(event_info):
                     document_date = event.get('DisplayDate')
-                    date_convert = datetime.strptime(document_date, '%d.%m.%Y').date()
-                    logging.info(f'{event}')
-                    document_date_type = type(date_convert)
-                    logging.info(f'{date_convert}, {document_date_type}')
-                    if date_convert < last_event_date:
-                        print ("Меньше")
+                    date_convert = datetime.strptime(document_date,
+                                                     '%d.%m.%Y').date()
+                    if date_convert > last_event_date:
+                        info = f'Новое событие: {event}'
+                        logging.info(info)
+                        bot.bot.send_message(CHAT_ID, info)
+                        update_last_event_date(case, date_convert)
+                        last_event_date = get_last_event_date(case)[0]
+                        logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
+
+
 
 
 
