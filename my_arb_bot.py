@@ -162,7 +162,7 @@ def main():
                         #Проверить, является ли новое событие решением или постановлением
                         document_type_name = event.get('DocumentTypeName')[0]
                         content_types = event.get('ContentTypes')[0]
-                        decision_type_name = event.get('DecisionTypeName')[0]
+                        decision_type_name = event.get('DecisionTypeName')
 
                         # decision_type_name заполняется результатом рассмотрения только в суде 1ой инст
                         if decision_type_name is not None or 'часть' in content_types or "Мотивированное" in content_types:
