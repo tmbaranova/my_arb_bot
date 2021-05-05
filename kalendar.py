@@ -92,6 +92,7 @@ def data_vstupl (data, lst_weeks):
     d = str(d)
     d = f'{datetime.datetime.strptime(d,"%j").strftime("%d.%m")}.{year}'
     force_data = datetime.datetime.strptime(d, '%d.%m.%Y').date()
+    print ('ДАТА ВСТ В СИЛУ ЗАПАРШЕННАЯ РАВНА', force_data, type(force_data))
     return force_data
 
 def force_date_runner (event_date):
