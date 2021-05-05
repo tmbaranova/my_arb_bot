@@ -9,8 +9,9 @@ from telegram.ext.dispatcher import run_async
 from dbhelper import *
 from arb_parser import Parser
 
-from datetime import datetime, date, time
+from datetime import datetime
 
+import time
 
 from kalendar import *
 
