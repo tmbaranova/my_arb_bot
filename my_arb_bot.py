@@ -161,7 +161,9 @@ def main():
 
                         #Проверить, является ли новое событие решением или постановлением
                         document_type_name = event.get('DocumentTypeName')[0]
+                        print (document_type_name)
                         content_types = event.get('ContentTypes')[0]
+                        print (content_types)
                         decision_type_name = event.get('DecisionTypeName')
 
                         # decision_type_name заполняется результатом рассмотрения только в суде 1ой инст
