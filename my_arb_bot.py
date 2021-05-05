@@ -1,6 +1,6 @@
 import logging
 import os
-import time
+from datetime import datetime, date, time
 
 from dotenv import load_dotenv
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
@@ -9,7 +9,7 @@ from telegram.ext.dispatcher import run_async
 
 from dbhelper import *
 from arb_parser import Parser
-from datetime import datetime, date
+
 
 from kalendar import *
 
