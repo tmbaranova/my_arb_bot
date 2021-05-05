@@ -150,6 +150,8 @@ def get_row(row, case_number):
     cur = conn.cursor()
     sql = "SELECT %s FROM cases WHERE case_number = (%s)"
     cur.execute(sql, (AsIs(row), case_number))
+    get_row_data = cur.fetchone()
     conn.commit()
     conn.close()
+    return get_row_data
 
