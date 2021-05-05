@@ -67,10 +67,9 @@ def dict_update(dict):
 
 def data_vstupl (data, lst_weeks):
     '''Функиця расчета даты вступления решения в силу по дате решения и списку выходных и праздничных дней'''
-    dat = datetime.datetime.strptime(data, '%d.%m.%Y')
-    d = int(dat.strftime("%j"))
+    d = int(data.strftime("%j"))
 
-    year = int(dat.year)
+    year = int(data.year)
     days_in_year = 365
     if year in [2012,2016,2020,2024,2028,2032]:
         days_in_year = 366
