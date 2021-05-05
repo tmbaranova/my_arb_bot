@@ -135,39 +135,9 @@ class Parser:
         content = event.get('ContentTypes')
         document_type = event.get('DocumentTypeName')
         decision = event.get('DecisionTypeName')
-        info = f'От кого: {organisation}, дата подачи: {date}, {additional_info}, документ: {content}, тип документа: {document_type}, {decision}'
+        info = f'от кого: {organisation}, дата подачи: {date}, {additional_info}, документ: {content}, тип документа: {document_type}, {decision}'
         return info
 
 
-
-
-
-
-    #
-    # def json_parse(self, event):
-    #     document_date = event_info.get('DisplayDate')
-    #
-    #     if document_date>last_event_date
-    #
-    #         if document_date is not None and document_date != '':
-    #             date_norm = date_convert(document_date)
-    #             if date_norm > date and (case_info[i]['Declarers'] == [] or
-    #                                      case_info[i]['Declarers'][0][
-    #                                          'OrganizationId'] != '5b608d8f-ecee-41cd-b14d-d8b2cf8127c2'):
-    #                 date_norm = datetime.datetime.strftime(date_norm,
-    #                                                        "%d.%m.%Y")
-    #                 document_type_name = case_info[i]["DocumentTypeName"]
-    #                 content_type = case_info[i]['ContentTypes']
-    #                 file_id = case_info[i]['Id']
-    #                 case_id = case_info[i]['CaseId']
-    #                 file_name = case_info[i]['FileName']
-    #                 link = (f'https://kad.arbitr.ru/Document/Pdf/{case_id}/'
-    #                         f'{file_id}/{file_name}?isAddStamp=True')
-    #
-    #                 print(document_type_name)
-    #                 print(content_type)
-    #                 print(date_norm)
-    #                 print(link)
-    #
 
 

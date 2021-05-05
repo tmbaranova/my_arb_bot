@@ -89,7 +89,11 @@ def main():
         for case in case_list:
             try:
                 case = case[0]
+                message = f'Проверяю дело {case}'
+                bot.bot.send_message(CHAT_ID, message)
                 session = parser.open_session()
+
+                #Проверка, есть ли кейс айди в базе данных, скачать и занести в БД, если нет
                 case_id = get_case_id(case)[0]
                 logging.info(f'Case_id дела {case} равен {case_id}')
                 if case_id is None:
@@ -103,9 +107,8 @@ def main():
                     update_case_id(case_id_from_soup, case)
                     case_id = get_case_id(case)[0]
                     logging.info(f'Case_id дела {case} обновлен и равен {case_id}')
-                    message = f'Case_id дела {case} обновлен и равен {case_id}'
-                    bot.bot.send_message(CHAT_ID, message)
 
+                # Получение списка событий из JSON-a
                 case_info = parser.get_json(session, case_id)
                 event_info = case_info.get('Result').get('Items')
                 if event_info is None:
@@ -114,28 +117,57 @@ def main():
                     bot.bot.send_message(CHAT_ID,
                                          f'event_info дела {case} is None, я вышел из цикла')
                     return
-
+                # Получение из БД даты последнего события по делу
                 last_event_date = get_last_event_date(case)[0]
-                last_event_date_type = type(last_event_date)
                 logging.info(
-                    f'Last event date = {last_event_date}, {last_event_date_type}')
+                    f'Last event date = {last_event_date}')
+                #Для каждого события из списка событий
                 for event in reversed(event_info):
+                    #Получить дату события из JSON-a, перевести из строки в дататайм
                     document_date = event.get('DisplayDate')
                     date_convert = datetime.strptime(document_date,
                                                      '%d.%m.%Y').date()
+                    #Если событие произошло позже, чем дата последнего события, которая есть в БД, то считать это событие новым
                     if date_convert > last_event_date:
-                        info = f'Новое событие: {event}'
+                        info = f'Новое событие по делу {case}: {event}'
                         logging.info(info)
+                        #Отправлять сообщение в телегу о новом событии, только если организация не моя
                         if parser.check_organization(event):
+                            #Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
                             msg_text = parser.collect_message_text(event)
-                            bot.bot.send_message(CHAT_ID, msg_text)
+                            bot.bot.send_message(CHAT_ID, f'Новое событие по делу {case}: {msg_text}')
+                        #Обновить дату последнего события в БД
                         update_last_event_date(case, date_convert)
                         last_event_date = get_last_event_date(case)[0]
                         logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
-
-
-
-
+                    #Проверить, является ли новое событие решением или постановлением
+                    event_type = event.get('DocumentTypeName')
+                    content_type = event.get('ContentTypes')
+                    if event_type == 'Решения и постановления':
+                        first_decision_date = get_first_decision_date(case)[0]
+                        apell_decision_date = get_apell_decision_date(case)[0]
+                        #Если в БД нет даты решения 1ой инстанции, значит, это решение 1ой инстанции - обновить дату решения 1ой в БД
+                        if first_decision_date is None and apell_decision_date is None:
+                            update_row('first_decision_date', date_convert, case)
+                            logging.info(
+                                f'first_decision_date дела {case} обновлена и равна {date_convert}')
+                            bot.bot.send_message(CHAT_ID,
+                                                 f'first_decision_date дела {case} обновлена и равна {date_convert}')
+                        # Если в БД есть решение 1ой, и нет даты решения апелл, нужно проверить, не мотивировку ли вынесли
+                        if first_decision_date and apell_decision_date is None:
+                            if 'Мотивированное' in content_type:
+                                update_row('first_decision_date', date_convert, case)
+                                logging.info(
+                                    f'first_decision_date дела {case} обновлена и равна {date_convert} (мот реш)')
+                                bot.bot.send_message(CHAT_ID,
+                                                     f'first_decision_date дела {case} обновлена и равна {date_convert} (мот реш)')
+                            else:
+                                #Если в БД есть решение 1ой, нет даты решения апелл, и вынесено не мот реш, значит, вынесено пост. апелл
+                                update_row('apell_decision_date', date_convert, case)
+                                logging.info(
+                                    f'apell_decision_date дела {case} обновлена и равна {date_convert}')
+                                bot.bot.send_message(CHAT_ID,
+                                                 f'apell_decision_date дела {case} обновлена и равна {date_convert}')
 
 
 
@@ -156,8 +188,6 @@ def main():
                 # else:
                 #     is_finished = False
                 #     case_is_finished_or_not(case[0], is_finished)
-
-
 
                 time.sleep(1200)
             except Exception as e:
