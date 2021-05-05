@@ -18,8 +18,7 @@ dict_month = {
 }
 
 def get_year(data):
-    d = datetime.datetime.strptime(data, '%d.%m.%Y')
-    year = d.year
+    year = data.year
     return year
 
 def get_url (year):
