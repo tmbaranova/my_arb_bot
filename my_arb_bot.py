@@ -9,7 +9,7 @@ from telegram.ext.dispatcher import run_async
 from dbhelper import *
 from arb_parser import Parser
 
-from datetime import datetime
+import datetime
 
 import time
 
@@ -143,7 +143,7 @@ def main():
 
                     #Получить дату события из JSON-a, перевести из строки в дататайм
                     document_date = event.get('DisplayDate')
-                    date_convert = datetime.strptime(document_date,
+                    date_convert = datetime.datetime.strptime(document_date,
                                                      '%d.%m.%Y').date()
                     #Если событие произошло позже, чем дата последнего события, которая есть в БД, то считать это событие новым
                     if date_convert > last_event_date:
