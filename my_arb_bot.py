@@ -127,7 +127,8 @@ def main():
                         info = f'Новое событие: {event}'
                         logging.info(info)
                         if parser.check_organization(event):
-                            bot.bot.send_message(CHAT_ID, info)
+                            msg_text = parser.collect_message_text(event)
+                            bot.bot.send_message(CHAT_ID, msg_text)
                         update_last_event_date(case, date_convert)
                         last_event_date = get_last_event_date(case)[0]
                         logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')

@@ -118,13 +118,28 @@ class Parser:
     def check_organization(self, event):
         try:
             organisation = event.get('Declarers')[0].get('Organization')
-            print (f'organization = {organisation}')
+            print(f'organization = {organisation}')
             if 'ЛОКОТРАНС' in organisation or 'Локотранс' in organisation or 'локотранс' in organisation:
                 return False
             return True
-        except Exception as e:
-            print(e)
+        except Exception:
             return True
+
+    def collect_message_text(self, event):
+        try:
+            organisation = event.get('Declarers')[0].get('Organization')
+        except Exception:
+            organisation = 'организация не определена'
+        date = event.get('DisplayDate')
+        additional_info = event.get('AdditionalInfo')
+        content = event.get('ContentTypes')
+        document_type = event.get('DocumentTypeName')
+        decision = event.get('DecisionTypeName')
+        info = f'От кого: {organisation}, дата подачи: {date}, {additional_info}, документ: {content}, тип документа: {document_type}, {decision}'
+        return info
+
+
+
 
 
 
