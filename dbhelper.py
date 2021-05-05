@@ -2,6 +2,7 @@ import os
 import psycopg2
 from psycopg2.extensions import AsIs
 from datetime import datetime
+from datetime import date
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
@@ -43,7 +44,7 @@ def add_case(item_text):
     conn = create_connection()
     cur = conn.cursor()
     td = datetime.strptime('05.03.2019', '%d.%m.%Y')
-    # td = datetime.today()
+    # td = date.today()
     sql = "INSERT INTO cases (case_number, last_event_date) VALUES (%s, %s)"
     cur.execute(sql, (item_text, td))
     conn.commit()

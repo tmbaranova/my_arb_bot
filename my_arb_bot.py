@@ -1,7 +1,7 @@
 import logging
 import os
-import time
 
+from datetime import time, date, datetime
 from dotenv import load_dotenv
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
 from telegram import Bot
@@ -9,7 +9,6 @@ from telegram.ext.dispatcher import run_async
 
 from dbhelper import *
 from arb_parser import Parser
-from datetime import datetime
 
 from kalendar import *
 
@@ -91,7 +90,7 @@ def main():
         for case in case_list:
             try:
                 case = case[0]
-                today = datetime.today()
+                today = date.today()
                 message = f'Проверяю дело {case}'
                 bot.bot.send_message(CHAT_ID, message)
                 session = parser.open_session()
