@@ -142,7 +142,7 @@ def main():
                         logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
                     #Проверить, является ли новое событие решением или постановлением
                     event_type = event.get('DocumentTypeName')
-                    content_type = event.get('ContentTypes')
+                    content_type = event.get('ContentTypes')[0]
                     if event_type == 'Решения и постановления':
                         first_decision_date = get_first_decision_date(case)[0]
                         apell_decision_date = get_apell_decision_date(case)[0]
