@@ -116,7 +116,7 @@ class Parser:
         return case_info
 
     def check_organization(self, event):
-        organisation = event.get('Declarers').get('Organization')
+        organisation = event.get('Declarers')[0].get('Organization')
         print (f'organization = {organisation}')
         if 'ЛОКОТРАНС' in organisation or 'Локотранс' in organisation or 'локотранс' in organisation:
             return False
