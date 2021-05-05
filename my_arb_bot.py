@@ -153,7 +153,7 @@ def main():
                         if parser.check_organization(event):
                             #Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
                             msg_text = parser.collect_message_text(event)
-                            bot.bot.send_message(CHAT_ID, f'По делу {case}: дата реш 1ой:{first_decision_date}, дата пост апелл:{apell_decision_date}, новое событие:{msg_text}')
+                            bot.bot.send_message(CHAT_ID, f'Дело {case}: дата реш 1ой:{first_decision_date}, дата пост апелл:{apell_decision_date}, новое событие:{msg_text}')
                         #Обновить дату последнего события в БД
                         update_row('last_event_date', date_convert, case)
                         last_event_date = get_row('last_event_date', case)[0]
@@ -206,8 +206,8 @@ def main():
                         if 'мотивированного' in content_types:
                             update_row('force_date', None, case)
 
+                time.sleep(1200)
 
-                time.sleep(600)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)

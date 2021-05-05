@@ -129,7 +129,7 @@ class Parser:
         try:
             organisation = event.get('Declarers')[0].get('Organization')
         except Exception:
-            organisation = 'организация не определена'
+            organisation = 'организация не определена (судебное)'
         date = event.get('DisplayDate')
         additional_info = event.get('AdditionalInfo')
         content = event.get('ContentTypes')
