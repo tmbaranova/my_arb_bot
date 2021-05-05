@@ -1,8 +1,7 @@
 import os
 import psycopg2
 from psycopg2.extensions import AsIs
-from datetime import datetime
-from datetime import date
+from datetime import datetime, date
 
 DATABASE_URL = os.environ['DATABASE_URL']
 

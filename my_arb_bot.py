@@ -1,7 +1,7 @@
 import logging
 import os
+import time
 
-from datetime import time, date, datetime
 from dotenv import load_dotenv
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
 from telegram import Bot
@@ -9,6 +9,7 @@ from telegram.ext.dispatcher import run_async
 
 from dbhelper import *
 from arb_parser import Parser
+from datetime import datetime, date
 
 from kalendar import *
 
@@ -128,11 +129,9 @@ def main():
                 for event in reversed(event_info):
                     first_decision_date = get_first_decision_date(case)[0]
                     apell_decision_date = get_apell_decision_date(case)[0]
-                    try:
-                        force_date_from_db = get_row('force_date', case)[0]
-                    except Exception:
-                        force_date_from_db = None
-
+                    force_date_from_db = get_row('force_date', case)
+                    if force_date_from_db:
+                        force_date_from_db = force_date_from_db[0]
 
                     if today == force_date_from_db:
                         logging.info(
