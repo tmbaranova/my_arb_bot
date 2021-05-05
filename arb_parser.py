@@ -115,7 +115,15 @@ class Parser:
         case_info = response.json()
         return case_info
 
-    # def json_parse(self, event_info, last_event_date):
+    def check_organization(self, event):
+        organisation = event.get('Declarers').get('Organization')
+        if 'ЛОКОТРАНС' in organisation or 'Локотранс' in organisation or 'локотранс' in organisation:
+            return False
+        return True
+
+
+    #
+    # def json_parse(self, event):
     #     document_date = event_info.get('DisplayDate')
     #
     #     if document_date>last_event_date
@@ -139,6 +147,6 @@ class Parser:
     #                 print(content_type)
     #                 print(date_norm)
     #                 print(link)
-
+    #
 
 
