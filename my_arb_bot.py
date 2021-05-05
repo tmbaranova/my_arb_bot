@@ -133,6 +133,7 @@ def main():
                     first_decision_date = get_first_decision_date(case)[0]
                     apell_decision_date = get_apell_decision_date(case)[0]
                     force_date_from_db = get_row('force_date', case)
+                    print (f'ДАТА ВСТУПЛЕНИЯ В СИЛУ {force_date_from_db}')
                     if force_date_from_db:
                         force_date_from_db = force_date_from_db[0]
 
