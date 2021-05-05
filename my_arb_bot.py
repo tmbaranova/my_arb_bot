@@ -184,7 +184,7 @@ def main():
                             bot.bot.send_message(CHAT_ID, f'apell_decision_date дела {case} обновлена и равна {apell_decision_date}')
 
                         #Проверка, подана ли жалоба в срок
-                        if document_type_name == 'Жалоба':
+                        if 'Жалоба' in document_type_name:
                             try:
                                 if date_convert > force_date_from_db:
                                     logging.info(f'По делу {case} жалоба подана с нарушением срока!')
