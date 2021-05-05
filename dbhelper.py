@@ -153,10 +153,3 @@ def get_row(row, case_number):
     conn.commit()
     conn.close()
 
-def delete_row(row, case_number):
-    conn = create_connection()
-    cur = conn.cursor()
-    sql = "DELETE %s FROM cases WHERE case_number = (%s)"
-    cur.execute(sql, (AsIs(row), case_number))
-    conn.commit()
-    conn.close()

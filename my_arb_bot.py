@@ -94,6 +94,7 @@ def main():
             try:
                 case = case[0]
                 today = date.today()
+                print (f'СЕГОДНЯШНЯЯ ДАТА {today}')
                 message = f'Проверяю дело {case}'
                 bot.bot.send_message(CHAT_ID, message)
                 session = parser.open_session()
@@ -190,7 +191,7 @@ def main():
                                                  f'apell_decision_date дела {case} обновлена и равна {date_convert}')
 
                     #Проверка, подана ли жалоба в срок
-                    if event_type == 'Жалоба' or 'жалоба' in content_type:
+                    if event_type == 'Жалоба':
                         try:
                             if date_convert > force_date_from_db:
                                 logging.info(f'По делу {case} жалоба подана с нарушением срока!')
@@ -206,11 +207,11 @@ def main():
                             logging.info(f'По делу {case} подана жалоба, а дата вступления в силу не определена')
                             bot.bot.send_message(CHAT_ID,
                                                  f'По делу {case} подана жалоба, а дата вступления в силу не определена')
-                        delete_row('force_date', case)
+                        update_row('force_date', None, case)
 
                     # Удалить дату вступления в силу, если подано заявление о выдаче мот решения
                     if 'мотивированного' in content_type:
-                        delete_row('force_date', case)
+                        update_row('force_date', None, case)
 
 
 
