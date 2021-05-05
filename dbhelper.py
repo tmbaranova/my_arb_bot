@@ -139,7 +139,7 @@ def get_apell_decision_date(case_number):
 def update_row(row, date, case_number):
     conn = create_connection()
     cur = conn.cursor()
-    sql = "UPDATE cases SET (%s) = (%s) WHERE case_number = (%s)"
+    sql = "UPDATE cases SET %s = (%s) WHERE case_number = (%s)"
     cur.execute(sql, (row, date, case_number))
     conn.commit()
     conn.close()
