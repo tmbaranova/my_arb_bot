@@ -1,5 +1,6 @@
 import os
 import psycopg2
+from psycopg2.extensions import AsIs
 from datetime import datetime
 
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -140,7 +141,7 @@ def update_row(row, date, case_number):
     conn = create_connection()
     cur = conn.cursor()
     sql = "UPDATE cases SET %s = (%s) WHERE case_number = (%s)"
-    cur.execute(sql, (row, date, case_number))
+    cur.execute(sql, (AsIs(row), date, case_number))
     conn.commit()
     conn.close()
 
