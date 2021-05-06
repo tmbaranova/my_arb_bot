@@ -98,6 +98,7 @@ def main():
                 print (f'СЕГОДНЯШНЯЯ ДАТА {today}')
                 force_date_from_db = get_row('force_date', case)[0]
                 finished_date_from_db = get_row('finished_date', case)[0]
+                is_in_apell = get_row('is_in_apell', case)[0]
 
                 print(f'ДАТА ВСТУПЛЕНИЯ В СИЛУ {force_date_from_db}')
                 print(f'ДАТА ОКОНЧАНИЯ РАБОТЫ С ДЕЛОМ {finished_date_from_db}')
@@ -108,7 +109,7 @@ def main():
                     bot.bot.send_message(CHAT_ID,
                                          f'Решение по делу {case} вступило в силу {force_date_from_db}')
 
-                if finished_date_from_db and today >= finished_date_from_db:
+                if finished_date_from_db and today >= finished_date_from_db and not is_in_apell:
                     logging.info(
                         f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
                     bot.bot.send_message(CHAT_ID,
@@ -117,7 +118,6 @@ def main():
 
                 first_decision_date = get_row('first_decision_date', case)[0]
                 apell_decision_date = get_row('apell_decision_date', case)[0]
-                is_in_apell = get_row('is_in_apell', case)[0]
                 message = f'Дата реш 1ой: {first_decision_date}, дата пост апелл: {apell_decision_date}, обжалуется ли: {is_in_apell}'
                 bot.bot.send_message(CHAT_ID, message)
 
@@ -199,6 +199,7 @@ def main():
                             update_row('force_date', date_convert, case)
                             finished_date = force_date + datetime.timedelta(days=60)
                             update_row('finished_date', finished_date, case)
+                            update_row('is_in_apell', False, case)
                             force_date_from_db = get_row('force_date', case)[0]
                             finished_date_from_db = get_row('finished_date', case)[0]
                             logging.info(
@@ -224,6 +225,8 @@ def main():
                                                  f'{e} По делу {case} подана жалоба, а дата вступления в силу не определена')
                             update_row('force_date', None, case)
                             update_row('finished_date', None, case)
+                            update_row('is_in_apell', True, case)
+
 
                         # Удалить дату вступления в силу и дату окончания работы над делом, если подано заявление о выдаче мот решения
                         if 'мотивированного' in content_types:
