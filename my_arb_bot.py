@@ -103,7 +103,7 @@ def main():
                 print(f'ДАТА ВСТУПЛЕНИЯ В СИЛУ {force_date_from_db}')
                 print(f'ДАТА ОКОНЧАНИЯ РАБОТЫ С ДЕЛОМ {finished_date_from_db}')
 
-                if force_date_from_db and today >= force_date_from_db:
+                if force_date_from_db and today >= force_date_from_db and not is_in_apell:
                     logging.info(
                         f'Решение по делу {case} вступило в силу {force_date_from_db}')
                     bot.bot.send_message(CHAT_ID,
@@ -120,7 +120,6 @@ def main():
                 apell_decision_date = get_row('apell_decision_date', case)[0]
                 message = f'Дата реш 1ой: {first_decision_date}, дата пост апелл: {apell_decision_date}, обжалуется ли: {is_in_apell}'
                 bot.bot.send_message(CHAT_ID, message)
-
 
                 session = parser.open_session()
 
