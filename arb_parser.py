@@ -135,12 +135,35 @@ class Parser:
         content = event.get('ContentTypes')
         document_type = event.get('DocumentTypeName')
         decision = event.get('DecisionTypeName')
-        info = f'от кого: {organisation}, дата подачи: {date}, {additional_info}, документ: {content}, тип документа: {document_type}, {decision}'
+        info = (f'кто подал документ: {organisation}, дата подачи: {date}, {additional_info}, документ: {content}, ' 
+               f'тип документа: {document_type}, {decision}')
         return info
 
+    def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db):
+        if first_decision_date:
+            first = f'решение первой инстанции вынесено {first_decision_date}'
+        else:
+            first = 'решение первой инстанции не вынесено'
 
+        if apell_decision_date:
+            apell = f'постановление апелляции вынесено {apell_decision_date}'
+        else:
+            apell = 'постановление апелляции не вынесено'
 
+        if is_in_apell:
+            in_apell = 'решение сейчас обжалуется'
+        else:
+            in_apell = 'жалоба не подана'
 
+        if force_date_from_db:
+            force_date = f'дата вступления решения в силу: {force_date_from_db}'
+        else:
+            force_date = 'дата вступления решения в силу не определена'
 
+        if finished_date_from_db:
+            finished_date = f'планируемая дата удаления дела из БД: {finished_date_from_db}'
+        else:
+            finished_date = 'дело пока рано удалять из БД'
 
-
+        case_info_string = f'Информация о деле: {first}, {in_apell}, {apell}, {force_date}, {finished_date}'
+        return case_info_string
