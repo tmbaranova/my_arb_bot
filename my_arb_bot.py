@@ -93,14 +93,39 @@ def main():
         for case in case_list:
             try:
                 case = case[0]
+                bot.bot.send_message(CHAT_ID, f'Проверяю дело {case}')
                 today = date.today()
                 print (f'СЕГОДНЯШНЯЯ ДАТА {today}')
-                message = f'Проверяю дело {case}'
+                force_date_from_db = get_row('force_date', case)[0]
+                finished_date_from_db = get_row('finished_date', case)[0]
+
+                print(f'ДАТА ВСТУПЛЕНИЯ В СИЛУ {force_date_from_db}')
+                print(f'ДАТА ОКОНЧАНИЯ РАБОТЫ С ДЕЛОМ {finished_date_from_db}')
+
+                if today >= force_date_from_db:
+                    logging.info(
+                        f'Решение по делу {case} вступило в силу {force_date_from_db}')
+                    bot.bot.send_message(CHAT_ID,
+                                         f'Решение по делу {case} вступило в силу {force_date_from_db}')
+
+                if today >= finished_date_from_db:
+                    logging.info(
+                        f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
+                    bot.bot.send_message(CHAT_ID,
+                                         f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
+                    delete(case)
+
+                first_decision_date = get_row('first_decision_date', case)[0]
+                apell_decision_date = get_row('apell_decision_date', case)[0]
+                is_in_apell = get_row('is_in_apell', case)[0]
+                message = f'Дата реш 1ой: {first_decision_date}, дата пост апелл: {apell_decision_date}, обжалуется ли: {is_in_apell}'
                 bot.bot.send_message(CHAT_ID, message)
+
+
                 session = parser.open_session()
 
                 #Проверка, есть ли кейс айди в базе данных, скачать и занести в БД, если нет
-                case_id = get_case_id(case)[0]
+                case_id = get_row('case_id', case)[0]
                 logging.info(f'Case_id дела {case} равен {case_id}')
                 if case_id is None:
                     content = parser.get_content(session, case)
@@ -110,8 +135,8 @@ def main():
                         bot.bot.send_message(CHAT_ID, f'case_id_from_soup дела {case} is None, я вышел из цикла')
                         return
 
-                    update_case_id(case_id_from_soup, case)
-                    case_id = get_case_id(case)[0]
+                    update_row('case_id', case_id_from_soup, case)
+                    case_id = get_row('case_id', case)[0]
                     logging.info(f'Case_id дела {case} обновлен и равен {case_id}')
 
                 # Получение списка событий из JSON-a
@@ -130,17 +155,6 @@ def main():
 
                 #Для каждого события из списка событий
                 for event in reversed(event_info):
-                    first_decision_date = get_row('first_decision_date', case)[0]
-                    apell_decision_date = get_row('apell_decision_date', case)[0]
-                    force_date_from_db = get_row('force_date', case)[0]
-                    print (f'ДАТА ВСТУПЛЕНИЯ В СИЛУ {force_date_from_db}')
-
-                    if today == force_date_from_db:
-                        logging.info(
-                            f'Решение по делу {case} сегодня вступает в силу')
-                        bot.bot.send_message(CHAT_ID,
-                                             f'Решение по делу {case} сегодня вступает в силу')
-
                     #Получить дату события из JSON-a, перевести из строки в дататайм
                     document_date = event.get('DisplayDate')
                     date_convert = datetime.datetime.strptime(document_date,
@@ -153,7 +167,7 @@ def main():
                         if parser.check_organization(event):
                             #Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
                             msg_text = parser.collect_message_text(event)
-                            bot.bot.send_message(CHAT_ID, f'Дело {case}: дата реш 1ой:{first_decision_date}, дата пост апелл:{apell_decision_date}, новое событие:{msg_text}')
+                            bot.bot.send_message(CHAT_ID, f'Новое событие:{msg_text}')
                         #Обновить дату последнего события в БД
                         update_row('last_event_date', date_convert, case)
                         last_event_date = get_row('last_event_date', case)[0]
@@ -165,23 +179,31 @@ def main():
                         decision_type_name = event.get('DecisionTypeName')
 
                         # decision_type_name заполняется результатом рассмотрения только в суде 1ой инст
-                        if decision_type_name is not None or 'часть' in content_types or "Мотивированное" in content_types:
+                        if (decision_type_name is not None or 'часть' in content_types or "Мотивированное" in content_types) and not is_in_apell:
                             force_date = force_date_runner(date_convert)
                             update_row('force_date', force_date, case)
                             update_row('first_decision_date', date_convert, case)
+                            finished_date = force_date + datetime.timedelta(days=10)
+                            update_row('finished_date', finished_date, case)
                             first_decision_date = get_row('first_decision_date', case)[0]
                             force_date_from_db = get_row('force_date', case)[0]
+                            finished_date_from_db = get_row('finished_date', case)[0]
                             logging.info(
-                               f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}')
+                               f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
                             bot.bot.send_message(CHAT_ID,
-                               f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}')
+                               f'first_decision_date дела {case} обновлена и равна {first_decision_date}. Вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
 
                         if 'Постановление апелляционной инстанции' in document_type_name:
                             update_row('apell_decision_date', date_convert, case)
                             apell_decision_date = get_row('apell_decision_date', case)[0]
+                            update_row('force_date', date_convert, case)
+                            finished_date = force_date + datetime.timedelta(days=60)
+                            update_row('finished_date', finished_date, case)
+                            force_date_from_db = get_row('force_date', case)[0]
+                            finished_date_from_db = get_row('finished_date', case)[0]
                             logging.info(
-                                   f'apell_decision_date дела {case} обновлена и равна {apell_decision_date}')
-                            bot.bot.send_message(CHAT_ID, f'apell_decision_date дела {case} обновлена и равна {apell_decision_date}')
+                                   f'apell_decision_date дела {case} обновлена и равна {apell_decision_date}, вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
+                            bot.bot.send_message(CHAT_ID, f'apell_decision_date дела {case} обновлена и равна {apell_decision_date}, вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
 
                         #Проверка, подана ли жалоба в срок
                         if 'Жалоба' in document_type_name:
@@ -201,10 +223,12 @@ def main():
                                 bot.bot.send_message(CHAT_ID,
                                                  f'{e} По делу {case} подана жалоба, а дата вступления в силу не определена')
                             update_row('force_date', None, case)
+                            update_row('finished_date', None, case)
 
-                        # Удалить дату вступления в силу, если подано заявление о выдаче мот решения
+                        # Удалить дату вступления в силу и дату окончания работы над делом, если подано заявление о выдаче мот решения
                         if 'мотивированного' in content_types:
                             update_row('force_date', None, case)
+                            update_row('finished_date', None, case)
 
                 time.sleep(1200)
 

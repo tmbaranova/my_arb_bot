@@ -23,6 +23,7 @@ def create_table():
         case_id TEXT DEFAULT NULL,
         access_code TEXT DEFAULT NULL,
         is_finished boolean DEFAULT false,
+        finished_date date DEFAULT NULL,
         is_in_force boolean DEFAULT false,
         force_date date DEFAULT NULL,
         last_event TEXT DEFAULT NULL,
@@ -33,9 +34,8 @@ def create_table():
         apell_decision_date date DEFAULT NULL,
         kas_decision TEXT DEFAULT NULL,
         kas_decision_date date DEFAULT NULL,
-        is_mot_dec_required boolean DEFAULT false,
-        is_mot_dec boolean DEFAULT false,
-        mot_dec_date date DEFAULT NULL);''')
+        is_in_apell boolean DEFAULT false,
+        is_in_kas boolean DEFAULT false);''')
     conn.commit()
     conn.close()
 
@@ -73,23 +73,6 @@ def get_cases():
     conn.close()
     return cases
 
-def get_case_id(case_number):
-    conn = create_connection()
-    cur = conn.cursor()
-    sql = "SELECT case_id FROM cases WHERE case_number = (%s)"
-    cur.execute(sql, (case_number,))
-    case_id = cur.fetchone()
-    conn.commit()
-    conn.close()
-    return case_id
-
-def update_case_id(case_id, case_number):
-    conn = create_connection()
-    cur = conn.cursor()
-    sql = "UPDATE cases SET case_id = (%s) WHERE case_number = (%s)"
-    cur.execute(sql, (case_id, case_number))
-    conn.commit()
-    conn.close()
 
 def case_is_finished_or_not(case_number, is_finished):
     conn = create_connection()
