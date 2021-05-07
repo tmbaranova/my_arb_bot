@@ -190,11 +190,11 @@ def main():
                             force_date_from_db = get_row('force_date', case)[0]
                             finished_date_from_db = get_row('finished_date', case)[0]
                             logging.info(
-                               f'first_decision_date дела {case} обновлена и равна {first_decision_date}. '
-                               f'Вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
+                               f'Дата решения первой инстанции по делу {case} обновлена и равна {first_decision_date}. '
+                               f'Решение вступит в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
                             bot.bot.send_message(CHAT_ID,
-                               f'first_decision_date дела {case} обновлена и равна {first_decision_date}. '
-                               f'Вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
+                               f'Дата решния первой инстанции по делу {case} обновлена и равна {first_decision_date}. '
+                               f'Решение вступит в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
 
                         if 'Постановление апелляционной инстанции' in document_type_name:
                             update_row('apell_decision_date', date_convert, case)
@@ -206,10 +206,10 @@ def main():
                             force_date_from_db = get_row('force_date', case)[0]
                             finished_date_from_db = get_row('finished_date', case)[0]
                             logging.info(
-                                   f'apell_decision_date дела {case} обновлена и равна {apell_decision_date}, '
-                                   f'вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
-                            bot.bot.send_message(CHAT_ID, f'apell_decision_date дела {case} обновлена и равна {apell_decision_date}, '
-                                                          f'вст в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
+                                   f'Дата постановления апелляции по делу {case} обновлена и равна {apell_decision_date}, '
+                                   f'решение вступило в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
+                            bot.bot.send_message(CHAT_ID, f'Дата постановления апелляции по делу {case} обновлена и равна {apell_decision_date}, '
+                                                          f'решение вступило в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
 
                         #Проверка, подана ли жалоба в срок
                         if 'Жалоба' in document_type_name:

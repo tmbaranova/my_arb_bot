@@ -9,6 +9,12 @@ load_dotenv()
 SAMLResponse = os.getenv('SAMLResponse')
 
 
+def str_or_empty_str(str):
+    if str is None:
+        return ""
+    else
+        return str
+
 class Parser:
     def open_session(self):
         headers_for_session = {
@@ -135,35 +141,30 @@ class Parser:
         content = event.get('ContentTypes')
         document_type = event.get('DocumentTypeName')
         decision = event.get('DecisionTypeName')
-        info = (f'кто подал документ: {organisation}, дата подачи: {date}, {additional_info}, документ: {content}, ' 
-               f'тип документа: {document_type}, {decision}')
+        info = (f'отправитель: {organisation}, дата: {date}, {str_or_empty_str(additional_info)} документ: {content}, ' 
+               f'тип: {document_type}, {str_or_empty_str(decision)}')
         return info
 
     def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db):
         if first_decision_date:
-            first = f'решение первой инстанции вынесено {first_decision_date}'
+            first = f'Решение первой инстанции вынесено {first_decision_date}.'
         else:
-            first = 'решение первой инстанции не вынесено'
+            first = 'Решение первой инстанции еще не вынесено.'
 
         if apell_decision_date:
-            apell = f'постановление апелляции вынесено {apell_decision_date}'
-        else:
-            apell = 'постановление апелляции не вынесено'
+            apell = f'Постановление апелляции вынесено {apell_decision_date}.'
 
         if is_in_apell:
-            in_apell = 'решение сейчас обжалуется'
-        else:
-            in_apell = 'жалоба не подана'
+            in_apell = 'Решение сейчас обжалуется.'
 
         if force_date_from_db:
-            force_date = f'дата вступления решения в силу: {force_date_from_db}'
-        else:
-            force_date = 'дата вступления решения в силу не определена'
+            force_date = f'Дата вступления решения в силу: {force_date_from_db}.'
 
         if finished_date_from_db:
-            finished_date = f'планируемая дата удаления дела из БД: {finished_date_from_db}'
-        else:
-            finished_date = 'дело пока рано удалять из БД'
+            finished_date = f'Дата окончания работы с делом: {finished_date_from_db}.'
 
-        case_info_string = f'Информация о деле: {first}, {in_apell}, {apell}, {force_date}, {finished_date}'
+        case_info_string = (f'{first}. {str_or_empty_str(in_apell)} '
+                            f'{str_or_empty_str(apell)} '
+                            f'{str_or_empty_str(force_date)} '
+                            f'{str_or_empty_str(finished_date)}')
         return case_info_string
