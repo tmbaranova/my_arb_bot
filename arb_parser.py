@@ -153,18 +153,23 @@ class Parser:
 
         if apell_decision_date:
             apell = f'Постановление апелляции вынесено {apell_decision_date}.'
+        else:
+            apell = ''
 
         if is_in_apell:
             in_apell = 'Решение сейчас обжалуется.'
+        else:
+            in_apell = ''
 
         if force_date_from_db:
             force_date = f'Дата вступления решения в силу: {force_date_from_db}.'
+        else:
+            force_date = ''
 
         if finished_date_from_db:
             finished_date = f'Дата окончания работы с делом: {finished_date_from_db}.'
+            finished_date = ''
 
-        case_info_string = (f'{first}. {str_or_empty_str(in_apell)} '
-                            f'{str_or_empty_str(apell)} '
-                            f'{str_or_empty_str(force_date)} '
-                            f'{str_or_empty_str(finished_date)}')
+        case_info_string = f'{first} {in_apell} {apell} {force_date} {finished_date}'
+
         return case_info_string
