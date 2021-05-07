@@ -12,7 +12,7 @@ SAMLResponse = os.getenv('SAMLResponse')
 def str_or_empty_str(str):
     if str is None:
         return ""
-    else
+    else:
         return str
 
 class Parser:
