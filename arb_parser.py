@@ -168,6 +168,7 @@ class Parser:
 
         if finished_date_from_db:
             finished_date = f'Дата окончания работы с делом: {finished_date_from_db}.'
+        else:
             finished_date = ''
 
         case_info_string = f'{first} {in_apell} {apell} {force_date} {finished_date}'
