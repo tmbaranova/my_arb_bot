@@ -93,7 +93,6 @@ def main():
         for case in case_list:
             try:
                 case = case[0]
-                bot.bot.send_message(CHAT_ID, f'Проверяю дело {case}')
                 today = date.today()
                 print (f'СЕГОДНЯШНЯЯ ДАТА {today}')
                 force_date_from_db = get_row('force_date', case)[0]
