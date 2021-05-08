@@ -119,7 +119,7 @@ def main():
                 first_decision_date = get_row('first_decision_date', case)[0]
                 apell_decision_date = get_row('apell_decision_date', case)[0]
                 message = parser.collect_case_info(first_decision_date, apell_decision_date,
-                                                   is_in_apell, force_date_from_db, finished_date_from_db)
+                                                   is_in_apell, force_date_from_db, finished_date_from_db, case_id)
                 bot.bot.send_message(CHAT_ID, message)
 
                 session = parser.open_session()
@@ -166,7 +166,7 @@ def main():
                         #Отправлять сообщение в телегу о новом событии, только если организация не моя
                         if parser.check_organization(event):
                             #Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
-                            msg_text = parser.collect_message_text(event)
+                            msg_text = parser.collect_message_text(event, case_id)
                             bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
                         #Обновить дату последнего события в БД
                         update_row('last_event_date', date_convert, case)

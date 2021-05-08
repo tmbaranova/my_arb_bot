@@ -131,46 +131,48 @@ class Parser:
         except Exception:
             return True
 
-    def collect_message_text(self, event):
+    def collect_message_text(self, event, case_id):
         try:
             organisation = event.get('Declarers')[0].get('Organization')
+            doc_link = 'https://kad.arbitr.ru/Document/Pdf/'
         except Exception:
             organisation = 'Суд'
+            doc_link = 'https://kad.arbitr.ru/SimpleJustice/Attachment/'
+        document_id = event.get('Id')
+        filename = event.get('FileName')
         date = event.get('DisplayDate')
         additional_info = event.get('AdditionalInfo')
         content = event.get('ContentTypes')
         document_type = event.get('DocumentTypeName')
         decision = event.get('DecisionTypeName')
+        full_document_link = f'{doc_link}{case_id}/{document_id}/{filename}'
         info = (f'отправитель: {organisation}, дата: {date}, {str_or_empty_str(additional_info)} документ: {content}, ' 
-               f'тип: {document_type}, {str_or_empty_str(decision)}')
+               f'тип: {document_type}, {str_or_empty_str(decision)}, ссылка на документ: {full_document_link}')
         return info
 
-    def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db):
+    def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db, case_id):
         if first_decision_date:
             first = f'Решение первой инстанции вынесено {first_decision_date}.'
         else:
             first = 'Решение первой инстанции еще не вынесено.'
-
         if apell_decision_date:
             apell = f'Постановление апелляции вынесено {apell_decision_date}.'
         else:
             apell = ''
-
         if is_in_apell:
             in_apell = 'Решение сейчас обжалуется.'
         else:
             in_apell = ''
-
         if force_date_from_db:
             force_date = f'Дата вступления решения в силу: {force_date_from_db}.'
         else:
             force_date = ''
-
         if finished_date_from_db:
             finished_date = f'Дата окончания работы с делом: {finished_date_from_db}.'
         else:
             finished_date = ''
 
-        case_info_string = f'{first} {in_apell} {apell} {force_date} {finished_date}'
+        case_link = f'https://kad.arbitr.ru/Card/{case_id}'
+        case_info_string = f'{first} {in_apell} {apell} {force_date} {finished_date}, ссылка на дело: {case_link}'
 
         return case_info_string
