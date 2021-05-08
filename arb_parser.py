@@ -173,6 +173,6 @@ class Parser:
             finished_date = ''
 
         case_link = f'https://kad.arbitr.ru/Card/{case_id}'
-        case_info_string = f'{first} {in_apell} {apell} {force_date} {finished_date}, ссылка на дело: {case_link}'
+        case_info_string = f'{first} {in_apell} {apell} {force_date} {finished_date} \n Cсылка на дело: {case_link}'
 
         return case_info_string
