@@ -118,9 +118,7 @@ def main():
 
                 first_decision_date = get_row('first_decision_date', case)[0]
                 apell_decision_date = get_row('apell_decision_date', case)[0]
-                message = parser.collect_case_info(first_decision_date, apell_decision_date,
-                                                   is_in_apell, force_date_from_db, finished_date_from_db, case_id)
-                bot.bot.send_message(CHAT_ID, message)
+
 
                 session = parser.open_session()
 
@@ -138,6 +136,14 @@ def main():
                     update_row('case_id', case_id_from_soup, case)
                     case_id = get_row('case_id', case)[0]
                     logging.info(f'Case_id дела {case} обновлен и равен {case_id}')
+
+                message = parser.collect_case_info(first_decision_date,
+                                                   apell_decision_date,
+                                                   is_in_apell,
+                                                   force_date_from_db,
+                                                   finished_date_from_db,
+                                                   case_id)
+                bot.bot.send_message(CHAT_ID, message)
 
                 # Получение списка событий из JSON-a
                 case_info = parser.get_json(session, case_id)
