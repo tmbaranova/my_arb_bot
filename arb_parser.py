@@ -150,7 +150,7 @@ class Parser:
                f'тип: {document_type}, {str_or_empty_str(decision)}, ссылка на документ: {full_document_link}')
         return info
 
-    def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db, case_id):
+    def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db, case_id, case):
         if first_decision_date:
             first = f'Решение первой инстанции вынесено {first_decision_date}.'
         else:
@@ -172,7 +172,7 @@ class Parser:
         else:
             finished_date = ''
 
-        case_link = f'https://kad.arbitr.ru/Card/{case_id}'
-        case_info_string = f'{first} {in_apell} {apell} {force_date} {finished_date} \nCсылка на дело: {case_link}'
+        case_link = f'[{case}](https://kad.arbitr.ru/Card/{case_id})'
+        case_info_string = f'{case_link}\n{first} {in_apell} {apell} {force_date} {finished_date}'
 
         return case_info_string

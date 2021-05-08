@@ -142,8 +142,9 @@ def main():
                                                    is_in_apell,
                                                    force_date_from_db,
                                                    finished_date_from_db,
-                                                   case_id)
-                bot.bot.send_message(CHAT_ID, message)
+                                                   case_id,
+                                                   case)
+                bot.bot.send_message(CHAT_ID, message, parse_mode='Markdown')
 
                 # Получение списка событий из JSON-a
                 case_info = parser.get_json(session, case_id)
@@ -173,7 +174,7 @@ def main():
                         if parser.check_organization(event):
                             #Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
                             msg_text = parser.collect_message_text(event, case_id)
-                            bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
+                            bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}', parse_mode='Markdown')
                         #Обновить дату последнего события в БД
                         update_row('last_event_date', date_convert, case)
                         last_event_date = get_row('last_event_date', case)[0]
