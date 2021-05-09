@@ -113,7 +113,7 @@ def main():
                         f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
                     bot.bot.send_message(CHAT_ID,
                                          f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
-                    delete(case)
+                    update_row('is_finished', True, case)
 
                 first_decision_date = get_row('first_decision_date', case)[0]
                 apell_decision_date = get_row('apell_decision_date', case)[0]
