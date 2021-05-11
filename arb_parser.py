@@ -146,7 +146,7 @@ class Parser:
         document_type = event.get('DocumentTypeName')
         decision = event.get('DecisionTypeName')
         full_document_link = f'{doc_link}{case_id}/{document_id}/{filename}'
-        info = (f'отправитель: {organisation}, дата: {date}, {str_or_empty_str(additional_info)} [документ: {content}]({full_document_link}), ' 
+        info = (f'отправитель: {organisation}, дата: {date}, {str_or_empty_str(additional_info)}, документ: {content}, ссылка: {full_document_link}, ' 
                f'тип: {document_type}, {str_or_empty_str(decision)}')
         return info
 

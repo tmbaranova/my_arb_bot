@@ -89,6 +89,10 @@ def main():
     case_list = get_cases()
 
     while case_list:
+        update_row('is_in_force', True, 'A40-192510/20-131-1818')
+        update_row('finished_date', '2021-06-30', 'A40-192510/20-131-1818')
+        update_row('is_in_apell', False, 'A40-192510/20-131-1818')
+
         case_list = get_cases()
         for case in case_list:
             try:
@@ -173,7 +177,7 @@ def main():
                         if parser.check_organization(event):
                             #Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
                             msg_text = parser.collect_message_text(event, case_id)
-                            bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}', parse_mode='Markdown')
+                            bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
                         #Обновить дату последнего события в БД
                         update_row('last_event_date', date_convert, case)
                         last_event_date = get_row('last_event_date', case)[0]
@@ -206,10 +210,10 @@ def main():
                             update_row('apell_decision_date', date_convert, case)
                             apell_decision_date = get_row('apell_decision_date', case)[0]
                             update_row('force_date', date_convert, case)
-                            finished_date = force_date + datetime.timedelta(days=60)
+                            force_date_from_db = get_row('force_date', case)[0]
+                            finished_date = force_date_from_db + datetime.timedelta(days=60)
                             update_row('finished_date', finished_date, case)
                             update_row('is_in_apell', False, case)
-                            force_date_from_db = get_row('force_date', case)[0]
                             finished_date_from_db = get_row('finished_date', case)[0]
                             logging.info(
                                    f'Дата постановления апелляции по делу {case} обновлена и равна {apell_decision_date}, '
