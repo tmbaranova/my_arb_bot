@@ -89,10 +89,6 @@ def main():
     case_list = get_cases()
 
     while case_list:
-        update_row('is_in_force', True, 'A40-192510/20-131-1818')
-        update_row('finished_date', '2021-06-30', 'A40-192510/20-131-1818')
-        update_row('is_in_apell', False, 'A40-192510/20-131-1818')
-
         case_list = get_cases()
         for case in case_list:
             try:
@@ -247,7 +243,7 @@ def main():
                             update_row('force_date', None, case)
                             update_row('finished_date', None, case)
 
-                time.sleep(1500)
+                time.sleep(1000)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)
