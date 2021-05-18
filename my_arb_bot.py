@@ -119,7 +119,6 @@ def main():
     case_list = get_cases()
 
     while case_list:
-        delete('/show_first')
         case_list = get_cases()
         for case in case_list:
             try:

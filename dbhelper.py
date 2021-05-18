@@ -104,7 +104,7 @@ def get_row(row, case_number):
 def select_first():
     conn = create_connection()
     cur = conn.cursor()
-    sql = "SELECT case_number FROM cases WHERE is_in_apell = false AND is_finished = false AND is_in_forse = false"
+    sql = "SELECT case_number FROM cases WHERE is_in_apell = false AND is_finished = false AND is_in_force = false"
     cur.execute(sql)
     cases_in_first = cur.fetchall()
     conn.commit()
@@ -115,7 +115,7 @@ def select_first():
 def select_apell():
     conn = create_connection()
     cur = conn.cursor()
-    sql = "SELECT case_number FROM cases WHERE is_in_apell = true AND is_finished = false AND is_in_forse = false"
+    sql = "SELECT case_number FROM cases WHERE is_in_apell = true AND is_finished = false AND is_in_force = false"
     cur.execute(sql)
     cases_in_apell = cur.fetchall()
     conn.commit()
@@ -126,7 +126,7 @@ def select_apell():
 def select_in_force():
     conn = create_connection()
     cur = conn.cursor()
-    sql = "SELECT case_number FROM cases WHERE is_finished = false AND is_in_forse = true"
+    sql = "SELECT case_number FROM cases WHERE is_finished = false AND is_in_force = true"
     cur.execute(sql)
     cases_in_force = cur.fetchall()
     conn.commit()
