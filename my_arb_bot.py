@@ -190,7 +190,7 @@ def main():
                 # Получение из БД даты последнего события по делу
                 last_event_date = get_row('last_event_date', case)[0]
                 if isinstance(last_event_date, datetime.date):
-                    last_event_date = datetime.datetime.combine(last_event_date, datetime.min.time())
+                    last_event_date = datetime.datetime.combine(last_event_date, datetime.datetime.min.time())
                 logging.info(
                     f'Last event date = {last_event_date}')
 
