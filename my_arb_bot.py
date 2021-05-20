@@ -110,7 +110,6 @@ class ArbitrBot:
 
 
 def main():
-    delete('A40-235130/20-32-2122')
     logging.info(f'Бот запущен')
     bot.bot.send_message(CHAT_ID, 'Бот запущен')
     parser = Parser()

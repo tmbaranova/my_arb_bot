@@ -186,14 +186,14 @@ class Parser:
                 string_of_digits += sumbol
 
         sec = int(string_of_digits) / 1000
-        converted_date = datetime.datetime.fromtimestamp(sec)
+        converted_date = datetime.fromtimestamp(sec)
 
         return converted_date
 
 
     def date_convert_naoborot(self):
-        date = datetime.datetime.now()
-        date = datetime.datetime.timestamp(date)
+        date = datetime.now()
+        date = datetime.timestamp(date)
         date = int(date*1000)
         return date
 
@@ -209,7 +209,7 @@ class Parser:
         else:
             document_date = event.get('DisplayDate')
             print(document_date)
-            date_converted = datetime.datetime.strptime(document_date,
+            date_converted = datetime.strptime(document_date,
                                                     '%d.%m.%Y')
             print(f'В случае пустого первого {date_converted}')
         return date_converted
