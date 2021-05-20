@@ -176,3 +176,40 @@ class Parser:
         case_info_string = f'{case_link}\n{first} {in_apell} {apell} {force_date} {finished_date}'
 
         return case_info_string
+
+
+def date_convert(date):
+    """Returns date in "%d.%m.%Y" format"""
+    string_of_digits = ''
+    for sumbol in date:
+        if sumbol.isdigit():
+            string_of_digits += sumbol
+
+    sec = int(string_of_digits) / 1000
+    converted_date = datetime.datetime.fromtimestamp(sec)
+
+    return converted_date
+
+
+def date_convert_naoborot():
+    date = datetime.datetime.now()
+    date = datetime.datetime.timestamp(date)
+    date = int(date*1000)
+    return date
+
+def get_date(event):
+    document_date = event.get('PublishDate')
+    print(f' Дата документа {document_date}')
+    print(type(document_date))
+    if document_date is not None and document_date != 'null':
+        print(document_date)
+        date_converted = date_convert(document_date)
+        print(date_converted)
+        print(type(date_converted))
+    else:
+        document_date = event.get('DisplayDate')
+        print(document_date)
+        date_converted = datetime.datetime.strptime(document_date,
+                                                    '%d.%m.%Y')
+        print(f'В случае пустого первого {date_converted}')
+    return date_converted

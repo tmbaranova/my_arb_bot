@@ -110,6 +110,7 @@ class ArbitrBot:
 
 
 def main():
+    delete('A40-235130/20-32-2122')
     logging.info(f'Бот запущен')
     bot.bot.send_message(CHAT_ID, 'Бот запущен')
     parser = Parser()
@@ -195,11 +196,9 @@ def main():
                 # Для каждого события из списка событий
                 for event in reversed(event_info):
                     # Получить дату события из JSON-a, перевести из строки в дататайм
-                    document_date = event.get('DisplayDate')
-                    date_convert = datetime.datetime.strptime(document_date,
-                                                     '%d.%m.%Y').date()
+                    date_converted = parser.get_date(event)
                     # Если событие произошло позже, чем дата последнего события, которая есть в БД, то считать это событие новым
-                    if date_convert > last_event_date:
+                    if date_converted > last_event_date:
 
                         info = f'Новое событие по делу {case}: {event}'
                         logging.info(info)
@@ -210,7 +209,7 @@ def main():
                             msg_text = parser.collect_message_text(event, case_id)
                             bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
                         # Обновить дату последнего события в БД
-                        update_row('last_event_date', date_convert, case)
+                        update_row('last_event_date', date_converted, case)
                         last_event_date = get_row('last_event_date', case)[0]
                         logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
 
@@ -222,9 +221,9 @@ def main():
 
                         # decision_type_name заполняется результатом рассмотрения только в суде 1ой инст
                         if (decision_type_name is not None or 'часть' in content_types or "Мотивированное" in content_types) and not is_in_apell:
-                            force_date = force_date_runner(date_convert)
+                            force_date = force_date_runner(date_converted)
                             update_row('force_date', force_date, case)
-                            update_row('first_decision_date', date_convert, case)
+                            update_row('first_decision_date', date_converted, case)
                             finished_date = force_date + datetime.timedelta(days=10)
                             update_row('finished_date', finished_date, case)
                             first_decision_date = get_row('first_decision_date', case)[0]
@@ -238,9 +237,9 @@ def main():
                                f'Решение вступит в силу {force_date_from_db}, окончание работы с делом {finished_date_from_db}')
 
                         if 'Постановление апелляционной инстанции' in document_type_name:
-                            update_row('apell_decision_date', date_convert, case)
+                            update_row('apell_decision_date', date_converted, case)
                             apell_decision_date = get_row('apell_decision_date', case)[0]
-                            update_row('force_date', date_convert, case)
+                            update_row('force_date', date_converted, case)
                             force_date_from_db = get_row('force_date', case)[0]
                             finished_date = force_date_from_db + datetime.timedelta(days=60)
                             update_row('finished_date', finished_date, case)
@@ -255,7 +254,7 @@ def main():
                         # Проверка, подана ли жалоба в срок
                         if 'Жалоба' in document_type_name:
                             try:
-                                if date_convert > force_date_from_db:
+                                if date_converted > force_date_from_db:
                                     logging.info(f'По делу {case} жалоба подана с нарушением срока!')
                                     bot.bot.send_message(CHAT_ID,
                                                  f'По делу {case} жалоба подана с нарушением срока!')
