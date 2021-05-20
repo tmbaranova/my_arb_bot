@@ -166,6 +166,18 @@ def main():
                     case_id = get_row('case_id', case)[0]
                     logging.info(f'Case_id дела {case} обновлен и равен {case_id}')
 
+                # Собрать краткую инфу о деле и отправить сообщением
+                message = parser.collect_case_info(
+                        first_decision_date,
+                        apell_decision_date,
+                        is_in_apell,
+                        force_date_from_db,
+                        finished_date_from_db,
+                        case_id,
+                        case)
+                bot.bot.send_message(CHAT_ID, message,
+                                         parse_mode='Markdown')
+
                 # Получение списка событий из JSON-a
                 case_info = parser.get_json(session, case_id)
                 event_info = case_info.get('Result').get('Items')
@@ -193,17 +205,7 @@ def main():
                         logging.info(info)
                         # Отправлять сообщение в телегу о новом событии, только если организация не моя
                         if parser.check_organization(event):
-                            # Собрать краткую инфу о деле и отправить сообщением
-                            message = parser.collect_case_info(
-                                first_decision_date,
-                                apell_decision_date,
-                                is_in_apell,
-                                force_date_from_db,
-                                finished_date_from_db,
-                                case_id,
-                                case)
-                            bot.bot.send_message(CHAT_ID, message,
-                                                 parse_mode='Markdown')
+
                             # Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
                             msg_text = parser.collect_message_text(event, case_id)
                             bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
@@ -276,7 +278,7 @@ def main():
                             update_row('force_date', None, case)
                             update_row('finished_date', None, case)
 
-                time.sleep(1000)
+                time.sleep(800)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)

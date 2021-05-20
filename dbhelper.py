@@ -67,7 +67,7 @@ def delete(case_number):
 def get_cases():
     conn = create_connection()
     cur = conn.cursor()
-    cur.execute("SELECT case_number FROM cases where is_finished = false")
+    cur.execute("SELECT case_number FROM cases where is_finished = false ORDER BY last_event_date")
     cases = cur.fetchall()
     conn.commit()
     conn.close()
