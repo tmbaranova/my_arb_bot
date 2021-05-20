@@ -119,6 +119,9 @@ def main():
     case_list = get_cases()
 
     while case_list:
+        delete('A40-235130/2020')
+        delete('A40-235130/2020')
+        delete('A40-235130/2020')
         case_list = get_cases()
         for case in case_list:
             try:
