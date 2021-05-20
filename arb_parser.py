@@ -198,7 +198,8 @@ class Parser:
         return date
 
     def get_date(self, event):
-        document_date = event.get('PublishDate')
+
+        document_date = event.get('Date')
         print(f' Дата документа {document_date}')
         print(type(document_date))
         if document_date is not None and document_date != 'null':

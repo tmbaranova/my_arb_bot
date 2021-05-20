@@ -117,6 +117,7 @@ def main():
     console_handler = logging.StreamHandler()
     logger.addHandler(console_handler)
     case_list = get_cases()
+    delete('А40-235130/2020')
 
     while case_list:
         case_list = get_cases()
