@@ -199,7 +199,7 @@ class Parser:
 
     def get_date(self, event):
 
-        document_date = event.get('Date')
+        document_date = event.get('PublishDate')
         print(f' Дата документа {document_date}')
         print(type(document_date))
         if document_date is not None and document_date != 'null':
@@ -210,7 +210,8 @@ class Parser:
         else:
             document_date = event.get('DisplayDate')
             print(document_date)
-            date_converted = datetime.strptime(document_date,
-                                                    '%d.%m.%Y')
-            print(f'В случае пустого первого {date_converted}')
+            date_converted = datetime.combine(datetime.strptime(document_date,
+                                                    '%d.%m.%Y'), datetime.min.time())
+
+            print(f'В случае пустой PublishDate дата равна {date_converted}')
         return date_converted
