@@ -212,7 +212,7 @@ def main():
                             bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
                         # Обновить дату последнего события в БД
                         update_row('last_event_date', date_converted, case)
-                        update_row('last_event', last_event)
+                        update_row('last_event', last_event, case)
                         last_event_date = get_row('last_event_date', case)[0]
                         last_event_from_db = get_row('last_event', case)[0]
 
