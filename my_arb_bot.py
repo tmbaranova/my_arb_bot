@@ -120,10 +120,12 @@ def main():
 
     while case_list:
 
-        case_list = get_cases()
+        case_list = 'A40-97166/21-42-781'
+            # get_cases()
         for case in case_list:
             try:
-                case = case[0]
+                case = 'A40-97166/21-42-781'
+                    # case[0]
                 today = date.today()
                 print (f'СЕГОДНЯШНЯЯ ДАТА {today}')
                 force_date_from_db = get_row('force_date', case)[0]
