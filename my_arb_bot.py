@@ -120,12 +120,10 @@ def main():
 
     while case_list:
 
-        case_list = 'A40-97166/21-42-781'
-            # get_cases()
+        case_list = get_cases()
         for case in case_list:
             try:
-                case = 'A40-97166/21-42-781'
-                    # case[0]
+                case = case[0]
                 today = date.today()
                 print (f'СЕГОДНЯШНЯЯ ДАТА {today}')
                 force_date_from_db = get_row('force_date', case)[0]
@@ -284,7 +282,7 @@ def main():
                             update_row('force_date', None, case)
                             update_row('finished_date', None, case)
 
-                time.sleep(800)
+                time.sleep(1200)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)
