@@ -27,7 +27,7 @@ def create_table():
         is_in_force boolean DEFAULT false,
         force_date date DEFAULT NULL,
         last_event TEXT DEFAULT NULL,
-        last_event_date date,         
+        last_event_date timestamp,         
         first_decision TEXT DEFAULT NULL,
         first_decision_date date DEFAULT NULL,
         apell_decision TEXT DEFAULT NULL,
@@ -42,7 +42,7 @@ def create_table():
 def add_case(item_text):
     conn = create_connection()
     cur = conn.cursor()
-    td = datetime.strptime('05.03.2019', '%d.%m.%Y')
+    td = datetime.strptime('05.03.2018 00:00:00', '%d.%m.%Y %H:%M:S')
     # td = date.today()
     sql = "INSERT INTO cases (case_number, last_event_date) VALUES (%s, %s)"
     cur.execute(sql, (item_text, td))

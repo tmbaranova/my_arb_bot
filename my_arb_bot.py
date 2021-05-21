@@ -216,6 +216,7 @@ def main():
                         if isinstance(last_event_date, datetime.date):
                             last_event_date = datetime.datetime.combine(
                                 last_event_date, datetime.datetime.min.time())
+
                         logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
 
                         # Проверить, является ли новое событие решением или постановлением
@@ -282,7 +283,7 @@ def main():
                             update_row('force_date', None, case)
                             update_row('finished_date', None, case)
 
-                time.sleep(1200)
+                time.sleep(800)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)
