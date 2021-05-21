@@ -42,7 +42,7 @@ def create_table():
 def add_case(item_text):
     conn = create_connection()
     cur = conn.cursor()
-    td = datetime.strptime('05.03.2018 00:00:00', '%d.%m.%Y %H:%M:S')
+    td = datetime('2018', '1', '1')
     # td = date.today()
     sql = "INSERT INTO cases (case_number, last_event_date) VALUES (%s, %s)"
     cur.execute(sql, (item_text, td))
