@@ -193,13 +193,15 @@ def main():
                 logging.info(
                     f'Last event date = {last_event_date}')
 
+                last_event_from_db = get_row('last_event', case)[0]
+
                 # Для каждого события из списка событий
                 for event in reversed(event_info):
                     # Получить дату события из JSON-a, перевести из строки в дататайм
                     date_converted = parser.get_date(event)
+                    last_event = event.get('Id')
                     # Если событие произошло позже, чем дата последнего события, которая есть в БД, то считать это событие новым
-                    if date_converted > last_event_date:
-
+                    if date_converted >= last_event_date and last_event_from_db != last_event:
                         info = f'Новое событие по делу {case}: {event}'
                         logging.info(info)
                         # Отправлять сообщение в телегу о новом событии, только если организация не моя
@@ -210,9 +212,11 @@ def main():
                             bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
                         # Обновить дату последнего события в БД
                         update_row('last_event_date', date_converted, case)
+                        update_row('last_event', last_event)
                         last_event_date = get_row('last_event_date', case)[0]
+                        last_event_from_db = get_row('last_event', case)[0]
 
-                        logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
+                        logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}, last_event {last_event_from_db}')
 
                         # Проверить, является ли новое событие решением или постановлением
                         document_type_name = event.get('DocumentTypeName')
