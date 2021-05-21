@@ -133,17 +133,17 @@ def main():
                 print(f'ДАТА ВСТУПЛЕНИЯ В СИЛУ {force_date_from_db}')
                 print(f'ДАТА ОКОНЧАНИЯ РАБОТЫ С ДЕЛОМ {finished_date_from_db}')
 
-                if force_date_from_db and today == force_date_from_db and not is_in_apell:
+                if force_date_from_db and today == force_date_from_db.date() and not is_in_apell:
                     logging.info(
-                        f'Решение по делу {case} вступило в силу {force_date_from_db}')
+                        f'Решение по делу {case} вступило в силу {force_date_from_db.date()}')
                     bot.bot.send_message(CHAT_ID,
-                                         f'Решение по делу {case} вступило в силу {force_date_from_db}')
+                                         f'Решение по делу {case} вступило в силу {force_date_from_db.date()}')
 
-                if finished_date_from_db and today >= finished_date_from_db and not is_in_apell:
+                if finished_date_from_db and today >= finished_date_from_db.date() and not is_in_apell:
                     logging.info(
-                        f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
+                        f'Работа с делом {case} окончена {finished_date_from_db.date()}, дело удалено списка')
                     bot.bot.send_message(CHAT_ID,
-                                         f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
+                                         f'Работа с делом {case} окончена {finished_date_from_db.date()}, дело удалено списка')
                     update_row('is_finished', True, case)
 
                 first_decision_date = get_row('first_decision_date', case)[0]
