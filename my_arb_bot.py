@@ -190,8 +190,8 @@ def main():
                     return
                 # Получение из БД даты последнего события по делу
                 last_event_date = get_row('last_event_date', case)[0]
-                if isinstance(last_event_date, datetime.date):
-                    last_event_date = datetime.datetime.combine(last_event_date, datetime.datetime.min.time())
+                # if isinstance(last_event_date, datetime.date):
+                #     last_event_date = datetime.datetime.combine(last_event_date, datetime.datetime.min.time())
                 logging.info(
                     f'Last event date = {last_event_date}')
 
@@ -213,9 +213,9 @@ def main():
                         # Обновить дату последнего события в БД
                         update_row('last_event_date', date_converted, case)
                         last_event_date = get_row('last_event_date', case)[0]
-                        if isinstance(last_event_date, datetime.date):
-                            last_event_date = datetime.datetime.combine(
-                                last_event_date, datetime.datetime.min.time())
+                        # if isinstance(last_event_date, datetime.date):
+                        #     last_event_date = datetime.datetime.combine(
+                        #         last_event_date, datetime.datetime.min.time())
 
                         logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
 

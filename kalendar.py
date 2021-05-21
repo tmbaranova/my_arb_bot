@@ -17,13 +17,16 @@ dict_month = {
     'Декабрь': 334,
 }
 
+
 def get_year(data):
     year = data.year
     return year
 
-def get_url (year):
+
+def get_url(year):
     url = f'http://www.consultant.ru/law/ref/calendar/proizvodstvennye/{year}/#shortday'
     return url
+
 
 def get_html(url):
     '''Функция, получающая html со страницы с календарем'''
@@ -33,6 +36,7 @@ def get_html(url):
     }
     r = requests.get(url,headers=HEADERS)
     return r.text
+
 
 def get_content(html):
     '''Парсер календаря '''
@@ -61,17 +65,17 @@ def dict_update(dict):
     for i in dict:
         for j in dict[i]:
             a = int(dict_month[i])+int(j)
-            lst_weekends.append (a)
+            lst_weekends.append(a)
     return lst_weekends
 
 
-def data_vstupl (data, lst_weeks):
+def data_vstupl(data, lst_weeks):
     '''Функиця расчета даты вступления решения в силу по дате решения и списку выходных и праздничных дней'''
     d = int(data.strftime("%j"))
 
     year = int(data.year)
     days_in_year = 365
-    if year in [2012,2016,2020,2024,2028,2032]:
+    if year in [2012, 2016, 2020, 2024, 2028, 2032]:
         days_in_year = 366
 
     counter = 0
@@ -91,17 +95,18 @@ def data_vstupl (data, lst_weeks):
 
     d = str(d)
     d = f'{datetime.datetime.strptime(d,"%j").strftime("%d.%m")}.{year}'
-    force_data = datetime.datetime.strptime(d, '%d.%m.%Y').date()
-    print ('ДАТА ВСТ В СИЛУ ЗАПАРШЕННАЯ РАВНА', force_data, type(force_data))
+    force_data = datetime.datetime.strptime(d, '%d.%m.%Y')
+    print('ДАТА ВСТ В СИЛУ ЗАПАРШЕННАЯ РАВНА', force_data, type(force_data))
     return force_data
 
-def force_date_runner (event_date):
+
+def force_date_runner(event_date):
     year = get_year(event_date)
     url = get_url(year)
     html = get_html(url)
     content = get_content(html)
     dict = dict_update(content)
-    force_date = (data_vstupl(event_date,dict))
+    force_date = (data_vstupl(event_date, dict))
     return force_date
 
 
