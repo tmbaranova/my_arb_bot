@@ -283,7 +283,7 @@ def main():
                             update_row('force_date', None, case)
                             update_row('finished_date', None, case)
 
-                time.sleep(800)
+                time.sleep(1200)
             except Exception as e:
                 error_text = f'Бот столкнулся с ошибкой: {e}'
                 logging.exception(e)
