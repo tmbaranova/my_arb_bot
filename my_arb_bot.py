@@ -260,7 +260,7 @@ def main():
                         # Проверка, подана ли жалоба в срок
                         if 'Жалоба' in document_type_name:
                             try:
-                                if date_converted > force_date_from_db:
+                                if date_converted.date() > force_date_from_db.date():
                                     logging.info(f'По делу {case} жалоба подана с нарушением срока!')
                                     bot.bot.send_message(CHAT_ID,
                                                  f'По делу {case} жалоба подана с нарушением срока!')
