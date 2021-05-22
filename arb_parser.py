@@ -152,11 +152,11 @@ class Parser:
 
     def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db, case_id, case):
         if first_decision_date:
-            first = f'Решение первой инстанции вынесено {first_decision_date}.'
+            first = f'Решение первой инстанции вынесено {first_decision_date.date()}.'
         else:
             first = 'Решение первой инстанции еще не вынесено.'
         if apell_decision_date:
-            apell = f'Постановление апелляции вынесено {apell_decision_date}.'
+            apell = f'Постановление апелляции вынесено {apell_decision_date.date()}.'
         else:
             apell = ''
         if is_in_apell:
@@ -164,11 +164,11 @@ class Parser:
         else:
             in_apell = ''
         if force_date_from_db:
-            force_date = f'Дата вступления решения в силу: {force_date_from_db}.'
+            force_date = f'Дата вступления решения в силу: {force_date_from_db.date()}.'
         else:
             force_date = ''
         if finished_date_from_db:
-            finished_date = f'Дата окончания работы с делом: {finished_date_from_db}.'
+            finished_date = f'Дата окончания работы с делом: {finished_date_from_db.date()}.'
         else:
             finished_date = ''
 
