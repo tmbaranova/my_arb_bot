@@ -133,17 +133,17 @@ def main():
                 print(f'ДАТА ВСТУПЛЕНИЯ В СИЛУ {force_date_from_db}')
                 print(f'ДАТА ОКОНЧАНИЯ РАБОТЫ С ДЕЛОМ {finished_date_from_db}')
 
-                if force_date_from_db and today == force_date_from_db and not is_in_apell:
+                if force_date_from_db and today == force_date_from_db.date() and not is_in_apell:
                     logging.info(
-                        f'Решение по делу {case} вступило в силу {force_date_from_db}')
+                        f'Решение по делу {case} вступило в силу {force_date_from_db.date()}')
                     bot.bot.send_message(CHAT_ID,
-                                         f'Решение по делу {case} вступило в силу {force_date_from_db}')
+                                         f'Решение по делу {case} вступило в силу {force_date_from_db.date()}')
 
-                if finished_date_from_db and today >= finished_date_from_db and not is_in_apell:
+                if finished_date_from_db and today >= finished_date_from_db.date() and not is_in_apell:
                     logging.info(
-                        f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
+                        f'Работа с делом {case} окончена {finished_date_from_db.date()}, дело удалено списка')
                     bot.bot.send_message(CHAT_ID,
-                                         f'Работа с делом {case} окончена {finished_date_from_db}, дело удалено списка')
+                                         f'Работа с делом {case} окончена {finished_date_from_db.date()}, дело удалено списка')
                     update_row('is_finished', True, case)
 
                 first_decision_date = get_row('first_decision_date', case)[0]
@@ -190,18 +190,18 @@ def main():
                     return
                 # Получение из БД даты последнего события по делу
                 last_event_date = get_row('last_event_date', case)[0]
-                if isinstance(last_event_date, datetime.date):
-                    last_event_date = datetime.datetime.combine(last_event_date, datetime.datetime.min.time())
                 logging.info(
                     f'Last event date = {last_event_date}')
+
+                last_event_from_db = get_row('last_event', case)[0]
 
                 # Для каждого события из списка событий
                 for event in reversed(event_info):
                     # Получить дату события из JSON-a, перевести из строки в дататайм
                     date_converted = parser.get_date(event)
+                    last_event = event.get('Id')
                     # Если событие произошло позже, чем дата последнего события, которая есть в БД, то считать это событие новым
-                    if date_converted > last_event_date:
-
+                    if date_converted >= last_event_date and last_event_from_db != last_event:
                         info = f'Новое событие по делу {case}: {event}'
                         logging.info(info)
                         # Отправлять сообщение в телегу о новом событии, только если организация не моя
@@ -212,12 +212,11 @@ def main():
                             bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
                         # Обновить дату последнего события в БД
                         update_row('last_event_date', date_converted, case)
+                        update_row('last_event', last_event, case)
                         last_event_date = get_row('last_event_date', case)[0]
-                        if isinstance(last_event_date, datetime.date):
-                            last_event_date = datetime.datetime.combine(
-                                last_event_date, datetime.datetime.min.time())
+                        last_event_from_db = get_row('last_event', case)[0]
 
-                        logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}')
+                        logging.info(f'last_event_date дела {case} обновлена и равна {last_event_date}, last_event {last_event_from_db}')
 
                         # Проверить, является ли новое событие решением или постановлением
                         document_type_name = event.get('DocumentTypeName')

@@ -198,19 +198,26 @@ class Parser:
         return date
 
     def get_date(self, event):
-
-        document_date = event.get('Date')
-        print(f' Дата документа {document_date}')
-        print(type(document_date))
-        if document_date is not None and document_date != 'null':
-            print(document_date)
-            date_converted = self.date_convert(document_date)
-            print(date_converted)
-            print(type(date_converted))
+        judges = event.get('Judges')
+        if not judges:
+            is_doc_from_court = False
         else:
+            is_doc_from_court = True
+
+        if is_doc_from_court:
             document_date = event.get('DisplayDate')
             print(document_date)
-            date_converted = datetime.strptime(document_date,
-                                                    '%d.%m.%Y')
-            print(f'В случае пустого первого {date_converted}')
+            date_converted = datetime.combine(datetime.strptime(document_date,
+                                                                '%d.%m.%Y'),
+                                              datetime.min.time())
+            print(f'Документ из суда, дата документа {date_converted}')
+
+        else:
+            document_date = event.get('Date')
+            print(f'Документ от стороны, дата документа {document_date}')
+            if document_date is not None and document_date != 'null':
+                date_converted = self.date_convert(document_date)
+                print(date_converted)
+
+
         return date_converted
