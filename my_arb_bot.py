@@ -1,5 +1,4 @@
 import logging
-import os
 
 from dotenv import load_dotenv
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
@@ -9,7 +8,6 @@ from telegram.ext.dispatcher import run_async
 from dbhelper import *
 from arb_parser import Parser
 
-import datetime
 
 import time
 
@@ -152,7 +150,7 @@ def main():
 
                 session = parser.open_session()
 
-                # Проверка, есть ли кейс айди в базе данных, скачать и занести в БД, если нет
+                # Проверка, есть ли case_id в базе данных, скачать и занести в БД, если нет
                 case_id = get_row('case_id', case)[0]
                 logging.info(f'Case_id дела {case} равен {case_id}')
                 if case_id is None:
@@ -167,7 +165,7 @@ def main():
                     case_id = get_row('case_id', case)[0]
                     logging.info(f'Case_id дела {case} обновлен и равен {case_id}')
 
-                # Собрать краткую инфу о деле и отправить сообщением
+                # Собрать краткую информацию о деле и отправить сообщением
                 message = parser.collect_case_info(
                         first_decision_date,
                         apell_decision_date,
@@ -197,17 +195,17 @@ def main():
 
                 # Для каждого события из списка событий
                 for event in reversed(event_info):
-                    # Получить дату события из JSON-a, перевести из строки в дататайм
+                    # Получить дату события из JSON-a, перевести из строки в datetime
                     date_converted = parser.get_date(event)
                     last_event = event.get('Id')
                     # Если событие произошло позже, чем дата последнего события, которая есть в БД, то считать это событие новым
                     if date_converted >= last_event_date and last_event_from_db != last_event:
                         info = f'Новое событие по делу {case}: {event}'
                         logging.info(info)
-                        # Отправлять сообщение в телегу о новом событии, только если организация не моя
+                        # Отправлять сообщение о новом событии, только если организация не моя
                         if parser.check_organization(event):
 
-                            # Собрать человекочитаемую инфу о событии из JSON-a и отправить сообщение о новом событии в телегу
+                            # Собрать информацию о событии из JSON-a и отправить сообщение о новом событии
                             msg_text = parser.collect_message_text(event, case_id)
                             bot.bot.send_message(CHAT_ID, f'Новое событие: {msg_text}')
                         # Обновить дату последнего события в БД

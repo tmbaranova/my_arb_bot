@@ -125,7 +125,9 @@ class Parser:
         try:
             organisation = event.get('Declarers')[0].get('Organization')
             print(f'organization = {organisation}')
-            if 'ЛОКОТРАНС' in organisation or 'Локотранс' in organisation or 'локотранс' in organisation:
+            if ('ЛОКОТРАНС' in organisation
+                    or 'Локотранс' in organisation
+                    or 'локотранс' in organisation):
                 return False
             return True
         except Exception:
@@ -146,11 +148,16 @@ class Parser:
         document_type = event.get('DocumentTypeName')
         decision = event.get('DecisionTypeName')
         full_document_link = f'{doc_link}{case_id}/{document_id}/{filename}'
-        info = (f'отправитель: {organisation}, дата: {date}, {str_or_empty_str(additional_info)}, документ: {content}, ссылка: {full_document_link}, ' 
-               f'тип: {document_type}, {str_or_empty_str(decision)}')
+        info = (f'отправитель: {organisation}, дата: {date}, '
+                f'{str_or_empty_str(additional_info)}, '
+                f'документ: {content}, ссылка: {full_document_link}, ' 
+                f'тип: {document_type}, {str_or_empty_str(decision)}')
         return info
 
-    def collect_case_info(self, first_decision_date, apell_decision_date, is_in_apell, force_date_from_db, finished_date_from_db, case_id, case):
+    def collect_case_info(self, first_decision_date,
+                          apell_decision_date, is_in_apell,
+                          force_date_from_db, finished_date_from_db,
+                          case_id, case):
         if first_decision_date:
             first = f'Решение первой инстанции вынесено {first_decision_date.date()}.'
         else:
@@ -177,7 +184,6 @@ class Parser:
 
         return case_info_string
 
-
     def date_convert(self, date):
         """Returns date in "%d.%m.%Y" format"""
         string_of_digits = ''
@@ -189,7 +195,6 @@ class Parser:
         converted_date = datetime.fromtimestamp(sec)
 
         return converted_date
-
 
     def date_convert_naoborot(self):
         date = datetime.now()
@@ -218,6 +223,4 @@ class Parser:
             if document_date is not None and document_date != 'null':
                 date_converted = self.date_convert(document_date)
                 print(date_converted)
-
-
         return date_converted
